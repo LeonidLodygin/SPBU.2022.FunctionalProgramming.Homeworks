@@ -224,16 +224,26 @@ var assemblies = [
   {
     "name": "Homeworks",
     "classes": [
-      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 1, "ucl": 2, "cal": 3, "tl": 11, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 1, "ucl": 10, "cal": 11, "tl": 28, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 8, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
 var historicCoverageExecutionTimes = [];
 
 var riskHotspotMetrics = [
+      { "name": "Cyclomatic complexity", "explanationUrl": "https://en.wikipedia.org/wiki/Cyclomatic_complexity" },
+      { "name": "NPath complexity", "explanationUrl": "https://modess.io/npath-complexity-cyclomatic-complexity-explained" },
+      { "name": "Crap Score", "explanationUrl": "https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" },
 ];
 
 var riskHotspots = [
+  {
+    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "System.Int32 Homeworks.Main::SimplePow(System.Int32,System.Int32)", "methodShortName": "SimplePow(...)", "fileIndex": 0, "line": 9,
+    "metrics": [
+      { "value": 5, "exceeded": false },
+      { "value": 16, "exceeded": false },
+      { "value": 30, "exceeded": true },
+    ]},
 ];
 
 var branchCoverageAvailable = true;
