@@ -224,7 +224,7 @@ var assemblies = [
   {
     "name": "Homeworks",
     "classes": [
-      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 1, "ucl": 22, "cal": 23, "tl": 44, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 22, "lch": [], "bch": [], "hc": [] },
+      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 12, "ucl": 11, "cal": 23, "tl": 44, "ct": "LineCoverage", "mc": "-", "cb": 14, "tb": 22, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
@@ -242,7 +242,7 @@ var riskHotspots = [
     "metrics": [
       { "value": 11, "exceeded": false },
       { "value": 1024, "exceeded": true },
-      { "value": 132, "exceeded": true },
+      { "value": 12.42, "exceeded": false },
     ]},
 ];
 
