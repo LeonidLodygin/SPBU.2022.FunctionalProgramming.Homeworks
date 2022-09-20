@@ -224,7 +224,7 @@ var assemblies = [
   {
     "name": "Homeworks",
     "classes": [
-      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 1, "ucl": 10, "cal": 11, "tl": 28, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 8, "lch": [], "bch": [], "hc": [] },
+      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 1, "ucl": 22, "cal": 23, "tl": 44, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 22, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
@@ -238,11 +238,11 @@ var riskHotspotMetrics = [
 
 var riskHotspots = [
   {
-    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "System.Int32 Homeworks.Main::SimplePow(System.Int32,System.Int32)", "methodShortName": "SimplePow(...)", "fileIndex": 0, "line": 9,
+    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "System.Double Homeworks.Main::SimplePow(System.Double,System.Int32)", "methodShortName": "SimplePow(...)", "fileIndex": 0, "line": 12,
     "metrics": [
-      { "value": 5, "exceeded": false },
-      { "value": 16, "exceeded": false },
-      { "value": 30, "exceeded": true },
+      { "value": 11, "exceeded": false },
+      { "value": 1024, "exceeded": true },
+      { "value": 132, "exceeded": true },
     ]},
 ];
 
