@@ -23,4 +23,32 @@ module SayTests =
               testCase "0 to the power of 0"
               <| fun _ ->
                   let Result = Main.SimplePow 0 0
-                  Expect.equal Result 0.0 "0 to the power of 0 is undefined" ]
+                  Expect.equal Result 0.0 "0 to the power of 0 is undefined"
+              testCase "positive to the power of positive"
+              <| fun _ ->
+                  let Result = Main.SimplePow 2 4
+                  Expect.equal Result 16.0 "2 to the power of 4 is 16"
+              testCase "array [|5; 5; 5; 5; 5; 5; 5|]"
+              <| fun _ ->
+                  let Result =
+                      Main.MinMaxFromArray [| 5
+                                              5
+                                              5
+                                              5
+                                              5
+                                              5
+                                              5 |]
+
+                  Expect.equal Result 0 "For array [|5; 5; 5; 5; 5; 5; 5|] answer is 0"
+              testCase "array [|121; 20; 3; -102; 54; 6; -78|]"
+              <| fun _ ->
+                  let Result =
+                      Main.MinMaxFromArray [| 121
+                                              20
+                                              3
+                                              -102
+                                              54
+                                              6
+                                              -78 |]
+
+                  Expect.equal Result 223 "For array [|121; 20; 3; -102; 54; 6; -78|] answer is 223" ]
