@@ -71,4 +71,12 @@ module SayTests =
                                               6
                                               -78 |]
 
-                  Expect.equal Result 223 "For array [|121; 20; 3; -102; 54; 6; -78|] answer is 223" ]
+                  Expect.equal Result 223 "For array [|121; 20; 3; -102; 54; 6; -78|] answer is 223"
+              testCase "Odds between 0 and 1"
+              <| fun _ ->
+                  let Result = Main.OddNumbersArray 0 1
+                  Expect.equal Result [||] "Zero odds between 0 and 1"
+              testCase "Odds between "
+              <| fun _ ->
+                  let Result = Main.OddNumbersArray -5 2
+                  Expect.equal Result [| -3; -1; 1 |] "Odds between -5 and 2: (-3; -1; 1)" ]
