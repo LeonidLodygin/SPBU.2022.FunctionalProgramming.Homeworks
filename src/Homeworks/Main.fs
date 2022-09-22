@@ -29,17 +29,26 @@ module Main =
             ans
 
 
-
-    (*let FastPow (n : float) a =
+    let rec FastPow (n: float) (a: int) =
         if n = 0.0 && a = 0 then
             printfn "Undefined"
             0.0
-        elif n = 0.0 then
-            0.0
-        elif n = 1.0 then
-            1.0
-        elif a >= 0 then
-            *)
+        else
+            let ans =
+                if n = 0.0 then
+                    0.0
+                elif n = 1 then
+                    1.0
+                elif a = 0 then
+                    1.0
+                elif a % 2 = 0 then
+                    let s = FastPow n (abs a / 2)
+                    s * s
+                else
+                    let s = FastPow n (abs a / 2)
+                    s * s * n
+
+            if a > 0 then ans else (1.0 / ans)
 
 
     let MinMaxFromArray (x: float []) =
@@ -53,7 +62,6 @@ module Main =
         max - min
 
 
-
     [<EntryPoint>]
     let main (argv: string array) =
         printfn "Choose what you want to do:\n1. SimplePow\n3. MinMaxFromArray"
@@ -61,6 +69,7 @@ module Main =
 
         match var with
         | 1 -> printfn $"Answer is: %A{SimplePow -3 -2}"
+        | 2 -> printfn $"Answer is: %A{FastPow 2 -2}"
         | 3 ->
             printfn
                 $"Answer is: %A{MinMaxFromArray [| 1

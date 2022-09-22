@@ -224,7 +224,7 @@ var assemblies = [
   {
     "name": "Homeworks",
     "classes": [
-      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 22, "ucl": 16, "cal": 38, "tl": 77, "ct": "LineCoverage", "mc": "-", "cb": 21, "tb": 28, "lch": [], "bch": [], "hc": [] },
+      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 37, "ucl": 17, "cal": 54, "tl": 86, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 42, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
@@ -245,11 +245,11 @@ var riskHotspots = [
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "System.Int32 Homeworks.Main::main(System.String[])", "methodShortName": "main(...)", "fileIndex": 0, "line": 59,
+    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "System.Int32 Homeworks.Main::main(System.String[])", "methodShortName": "main(...)", "fileIndex": 0, "line": 67,
     "metrics": [
+      { "value": 5, "exceeded": false },
       { "value": 4, "exceeded": false },
-      { "value": 4, "exceeded": false },
-      { "value": 20, "exceeded": true },
+      { "value": 30, "exceeded": true },
     ]},
 ];
 
