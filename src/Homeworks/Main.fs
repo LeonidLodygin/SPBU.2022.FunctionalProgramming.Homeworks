@@ -62,6 +62,7 @@ module Main =
     let MinMaxFromArray (x: float []) =
         let mutable min = x[0]
         let mutable max = x[0]
+
         // Iterating through the array and find the maximum and minimum elements
         for i = 0 to x.Length - 1 do
             if min > x[i] then min <- x[i] else ()
