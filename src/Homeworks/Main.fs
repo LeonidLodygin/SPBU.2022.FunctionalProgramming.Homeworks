@@ -1,5 +1,7 @@
 namespace Homeworks
 
+//open System
+
 module Main =
 
     // Simple exponentiation of a number.
@@ -73,26 +75,25 @@ module Main =
 
     // Get an array of odd numbers between two given
     let OddNumbersArray (a: int) (b: int) =
+        let min = if a < b then a else b
+        let max = if a > b then a else b
+
         let oddsArray =
-            [| if a < b then
-                   for i in a + 1 .. b - 1 do
-                       if i % 2 <> 0 then i
-               else
-                   for i in b + 1 .. a - 1 do
-                       if i % 2 <> 0 then i |]
+            [| for i in min + 1 .. max - 1 do
+                   if i % 2 <> 0 then i |]
 
         oddsArray
 
 
     [<EntryPoint>]
     let main (argv: string array) =
-        (*       printfn "Choose what you want to do:\n1. SimplePow\n2. FastPow\n3. MinMaxFromArray\n4. OddNumbersArray"
+        (* printfn "Choose what you want to do:\n1. SimplePow\n2. FastPow\n3. MinMaxFromArray\n4. OddNumbersArray"
         let var = Console.ReadLine() |> int
 
         match var with
         | 1 -> printfn $"Answer is: %A{SimplePow -2 -1}"
         | 2 -> printfn $"Answer is: %A{FastPow 2 -2}"
-        | 3 -> printfn $"Answer is: %A{MinMaxFromArray [||]}"
+        | 3 -> printfn $"Answer is: %A{MinMaxFromArray [|5; 2; 5; 8; 6; 1; 7; 4|]}"
         | 4 -> printfn $"Answer is: %A{OddNumbersArray 0 10}"
         | _ -> printfn "Error"
 *)
