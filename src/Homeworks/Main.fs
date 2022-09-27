@@ -32,7 +32,6 @@ module Main =
 
             ans
 
-
     // Fast exponentiation of a number
     let rec FastPow (n: float) (a: int) =
         // Checking the base and exponent. We don't want to multiply 0 or 1 by itself.
@@ -60,15 +59,19 @@ module Main =
 
     // The difference between the maximum and minimum elements in the array
     let MinMaxFromArray (x: float []) =
-        let mutable min = x[0]
-        let mutable max = x[0]
+        if x.Length = 0 then
+            failwith "Array is empty"
+        else
+            let mutable min = x[0]
+            let mutable max = x[0]
 
-        // Iterating through the array and find the maximum and minimum elements
-        for i = 0 to x.Length - 1 do
-            if min > x[i] then min <- x[i] else ()
-            if max < x[i] then max <- x[i] else ()
+            // Iterating through the array and find the maximum and minimum elements
+            for i = 0 to x.Length - 1 do
+                if min > x[i] then min <- x[i]
 
-        max - min
+                if max < x[i] then max <- x[i]
+
+            max - min
 
 
     // Get an array of odd numbers between two given
@@ -76,12 +79,13 @@ module Main =
         let oddsArray =
             [| if a < b then
                    for i in a + 1 .. b - 1 do
-                       if i % 2 <> 0 then i else ()
+                       if i % 2 <> 0 then i
                else
                    for i in b + 1 .. a - 1 do
-                       if i % 2 <> 0 then i else () |]
+                       if i % 2 <> 0 then i |]
 
         oddsArray
+
 
     [<EntryPoint>]
     let main (argv: string array) =
@@ -91,17 +95,7 @@ module Main =
         match var with
         | 1 -> printfn $"Answer is: %A{SimplePow -2 -1}"
         | 2 -> printfn $"Answer is: %A{FastPow 2 -2}"
-        | 3 ->
-            printfn
-                $"Answer is: %A{MinMaxFromArray [| 1
-                                                   2
-                                                   3
-                                                   4
-                                                   5
-                                                   6
-                                                   7
-                                                   9.2
-                                                   0 |]}"
+        | 3 -> printfn $"Answer is: %A{MinMaxFromArray [||]}"
         | 4 -> printfn $"Answer is: %A{OddNumbersArray 0 10}"
         | _ -> printfn "Error"
 
