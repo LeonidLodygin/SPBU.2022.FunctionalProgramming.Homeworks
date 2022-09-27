@@ -1,8 +1,5 @@
 namespace Homeworks
 
-open System
-
-
 module Main =
 
     // Simple exponentiation of a number.
@@ -89,7 +86,7 @@ module Main =
 
     [<EntryPoint>]
     let main (argv: string array) =
-        printfn "Choose what you want to do:\n1. SimplePow\n2. FastPow\n3. MinMaxFromArray\n4. OddNumbersArray"
+        (*       printfn "Choose what you want to do:\n1. SimplePow\n2. FastPow\n3. MinMaxFromArray\n4. OddNumbersArray"
         let var = Console.ReadLine() |> int
 
         match var with
@@ -98,5 +95,5 @@ module Main =
         | 3 -> printfn $"Answer is: %A{MinMaxFromArray [||]}"
         | 4 -> printfn $"Answer is: %A{OddNumbersArray 0 10}"
         | _ -> printfn "Error"
-
+*)
         0
