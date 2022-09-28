@@ -48,18 +48,20 @@ module SayTests =
               <| fun _ ->
                   let Result = Main.FastPow 2 4
                   Expect.equal Result 16.0 "2 to the power of 4 is 16"
-              testCase "array [|5; 5; 5; 5; 5; 5; 5|]"
+              //float
+              testCase "array [|5.5; 5.5; 5.5; 5.5; 5.5; 5.5; 5.5|]"
               <| fun _ ->
-                  let Result =
-                      Main.MinMaxFromArray [| 5
-                                              5
-                                              5
-                                              5
-                                              5
-                                              5
-                                              5 |]
+                  let (Result: float) =
+                      Main.MinMaxFromArray [| 5.5
+                                              5.5
+                                              5.5
+                                              5.5
+                                              5.5
+                                              5.5
+                                              5.5 |]
 
                   Expect.equal Result 0 "For array [|5; 5; 5; 5; 5; 5; 5|] answer is 0"
+              //int
               testCase "array [|121; 20; 3; -102; 54; 6; -78|]"
               <| fun _ ->
                   let Result =
@@ -72,6 +74,34 @@ module SayTests =
                                               -78 |]
 
                   Expect.equal Result 223 "For array [|121; 20; 3; -102; 54; 6; -78|] answer is 223"
+              //byte
+              testCase "array [|37uy;121uy;10uy|]"
+              <| fun _ ->
+                  let (Result: byte) =
+                      Main.MinMaxFromArray [| 37uy
+                                              121uy
+                                              10uy |]
+
+                  Expect.equal Result 111uy "For array [|37uy;121uy;10uy|] answer is 111uy"
+              //uint16
+              testCase "array [|371us;1231us;1001us|]"
+              <| fun _ ->
+                  let (Result: uint16) =
+                      Main.MinMaxFromArray [| 371us
+                                              1231us
+                                              1001us |]
+
+                  Expect.equal Result 860us "For array [|371us;1231us;1001us|] answer is 861us"
+              //decimal
+              testCase "array [|13.6m;121m;19.653m;152.125m|]"
+              <| fun _ ->
+                  let (Result: decimal) =
+                      Main.MinMaxFromArray [| 13.6m
+                                              121m
+                                              19.653m
+                                              152.125m |]
+
+                  Expect.equal Result 138.525m "For array [|13.6m;121m;19.653m;152.125m|] answer is 861us"
               testCase "Odds between 0 and 1"
               <| fun _ ->
                   let Result = Main.OddNumbersArray 0 1
