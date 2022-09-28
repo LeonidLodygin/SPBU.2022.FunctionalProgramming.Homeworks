@@ -57,7 +57,7 @@ module Main =
 
 
     // The difference between the maximum and minimum elements in the array
-    let MinMaxFromArray (x: float []) =
+    let MinMaxFromArray (x: 'value []) =
         if x.Length = 0 then
             failwith "Array is empty"
         else
@@ -87,13 +87,13 @@ module Main =
 
     [<EntryPoint>]
     let main (argv: string array) =
-        (* printfn "Choose what you want to do:\n1. SimplePow\n2. FastPow\n3. MinMaxFromArray\n4. OddNumbersArray"
+        (*       printfn "Choose what you want to do:\n1. SimplePow\n2. FastPow\n3. MinMaxFromArray\n4. OddNumbersArray"
         let var = Console.ReadLine() |> int
 
         match var with
         | 1 -> printfn $"Answer is: %A{SimplePow -2 -1}"
         | 2 -> printfn $"Answer is: %A{FastPow 2 -2}"
-        | 3 -> printfn $"Answer is: %A{MinMaxFromArray [|5; 2; 5; 8; 6; 1; 7; 4|]}"
+        | 3 -> printfn $"Answer is: %A{MinMaxFromArray [|12u; 22u; 13u; 15u; 110u; 1u|]}"
         | 4 -> printfn $"Answer is: %A{OddNumbersArray 0 10}"
         | _ -> printfn "Error"
 *)
