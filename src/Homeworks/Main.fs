@@ -7,35 +7,24 @@ module Main =
     let SimplePow (n: float) a =
         // Checking the base and exponent. We don't want to multiply 0 or 1 by itself.
         if n = 0.0 && a = 0 then
-            printfn "Undefined"
-            0.0
+            failwith "Undefined"
         elif n = 0.0 then
             0.0
         elif n = 1.0 then
             1.0
-        // negative exponent
-        elif a < 0 then
-            let mutable (ans: float) = 1.0
-
-            for i = 1 to -a do
-                ans <- n * ans
-
-            1.0 / (float ans)
-        // positive exponent
         else
-            let mutable (ans: float) = 1.0
+            let mutable ans = 1.0
 
-            for i = 1 to a do
+            for i = 1 to abs a do
                 ans <- n * ans
 
-            ans
+            if a > 0 then ans else (1.0 / ans)
 
     // Fast exponentiation of a number
     let rec FastPow (n: float) (a: int) =
         // Checking the base and exponent. We don't want to multiply 0 or 1 by itself.
         if n = 0.0 && a = 0 then
-            printfn "Undefined"
-            0.0
+            failwith "Undefined"
         elif n = 0.0 then
             0.0
         elif n = 1 then
@@ -45,12 +34,9 @@ module Main =
             let ans =
                 if a = 0 then
                     1.0
-                elif a % 2 = 0 then
-                    let s = FastPow n (abs a / 2)
-                    s * s
                 else
                     let s = FastPow n (abs a / 2)
-                    s * s * n
+                    if a % 2 = 0 then s * s else s * s * n
             // The answer varies depending on the sign of the exponent.
             if a > 0 then ans else (1.0 / ans)
 

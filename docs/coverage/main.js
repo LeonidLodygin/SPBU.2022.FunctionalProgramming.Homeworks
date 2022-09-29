@@ -224,7 +224,7 @@ var assemblies = [
   {
     "name": "Homeworks",
     "classes": [
-      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 37, "ucl": 9, "cal": 46, "tl": 100, "ct": "LineCoverage", "mc": "-", "cb": 36, "tb": 48, "lch": [], "bch": [], "hc": [] },
+      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 25, "ucl": 11, "cal": 36, "tl": 86, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
@@ -238,21 +238,14 @@ var riskHotspotMetrics = [
 
 var riskHotspots = [
   {
-    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "System.Double Homeworks.Main::SimplePow(System.Double,System.Int32)", "methodShortName": "SimplePow(...)", "fileIndex": 0, "line": 9,
-    "metrics": [
-      { "value": 10, "exceeded": false },
-      { "value": 512, "exceeded": true },
-      { "value": 10, "exceeded": false },
-    ]},
-  {
-    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray(value[])", "methodShortName": "MinMaxFromArray(...)", "fileIndex": 0, "line": 60,
+    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray(value[])", "methodShortName": "MinMaxFromArray(...)", "fileIndex": 0, "line": 46,
     "metrics": [
       { "value": 5, "exceeded": false },
       { "value": 16, "exceeded": false },
       { "value": 30, "exceeded": true },
     ]},
   {
-    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray$W(Microsoft.FSharp.Core.FSharpFunc`2<value,Microsoft.FSharp.Core.FSharpFunc`2<value,a>>,value[])", "methodShortName": "MinMaxFromArray$W(...)", "fileIndex": 0, "line": 60,
+    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray$W(Microsoft.FSharp.Core.FSharpFunc`2<value,Microsoft.FSharp.Core.FSharpFunc`2<value,a>>,value[])", "methodShortName": "MinMaxFromArray$W(...)", "fileIndex": 0, "line": 46,
     "metrics": [
       { "value": 5, "exceeded": false },
       { "value": 16, "exceeded": false },

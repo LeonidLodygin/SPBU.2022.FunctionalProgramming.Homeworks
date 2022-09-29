@@ -20,10 +20,6 @@ module SayTests =
               <| fun _ ->
                   let Result = Main.SimplePow 4 -2
                   Expect.equal Result 0.0625 "4 to the power of -2 is 0.0625"
-              testCase "0 to the power of 0"
-              <| fun _ ->
-                  let Result = Main.SimplePow 0 0
-                  Expect.equal Result 0.0 "0 to the power of 0 is undefined"
               testCase "positive to the power of positive"
               <| fun _ ->
                   let Result = Main.SimplePow 2 4
@@ -40,10 +36,6 @@ module SayTests =
               <| fun _ ->
                   let Result = Main.FastPow 4 -2
                   Expect.equal Result 0.0625 "4 to the power of -2 is 0.0625"
-              testCase "0 to the power of 0 (FastPow)"
-              <| fun _ ->
-                  let Result = Main.FastPow 0 0
-                  Expect.equal Result 0.0 "0 to the power of 0 is undefined"
               testCase "positive to the power of positive (FastPow)"
               <| fun _ ->
                   let Result = Main.FastPow 2 4
