@@ -7,7 +7,7 @@ module Main =
     let SimplePow (n: float) a =
         // Checking the base and exponent. We don't want to multiply 0 or 1 by itself.
         if n = 0.0 && a = 0 then
-            failwith "Undefined"
+            failwith "0 to the power of 0 is uncertainty"
         elif n = 0.0 then
             0.0
         elif n = 1.0 then
@@ -24,7 +24,7 @@ module Main =
     let rec FastPow (n: float) (a: int) =
         // Checking the base and exponent. We don't want to multiply 0 or 1 by itself.
         if n = 0.0 && a = 0 then
-            failwith "Undefined"
+            failwith "0 to the power of 0 is uncertainty"
         elif n = 0.0 then
             0.0
         elif n = 1 then
