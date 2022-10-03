@@ -224,7 +224,8 @@ var assemblies = [
   {
     "name": "Homeworks",
     "classes": [
-      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 25, "ucl": 11, "cal": 36, "tl": 86, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
+      { "name": "Homework2", "rp": "Homeworks_Homework2.html", "cl": 0, "ucl": 34, "cal": 34, "tl": 78, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 32, "lch": [], "bch": [], "hc": [] },
+      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 25, "ucl": 12, "cal": 37, "tl": 88, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
@@ -238,14 +239,35 @@ var riskHotspotMetrics = [
 
 var riskHotspots = [
   {
-    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray(value[])", "methodShortName": "MinMaxFromArray(...)", "fileIndex": 0, "line": 46,
+    "assembly": "Homeworks", "class": "Homework2", "reportPath": "Homeworks_Homework2.html", "methodName": "Homework2/MyList`1<value> Homework2/bubble@26::Invoke(Homework2/MyList`1<value>,System.Boolean,Homework2/MyList`1<value>)", "methodShortName": "Invoke(...)", "fileIndex": 0, "line": 26,
+    "metrics": [
+      { "value": 6, "exceeded": false },
+      { "value": 24, "exceeded": false },
+      { "value": 42, "exceeded": true },
+    ]},
+  {
+    "assembly": "Homeworks", "class": "Homework2", "reportPath": "Homeworks_Homework2.html", "methodName": "Homework2/MyList`1<value> Homework2::MinList(Homework2/MyList`1<value>,value)", "methodShortName": "MinList(...)", "fileIndex": 0, "line": 39,
     "metrics": [
       { "value": 5, "exceeded": false },
       { "value": 16, "exceeded": false },
       { "value": 30, "exceeded": true },
     ]},
   {
-    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray$W(Microsoft.FSharp.Core.FSharpFunc`2<value,Microsoft.FSharp.Core.FSharpFunc`2<value,a>>,value[])", "methodShortName": "MinMaxFromArray$W(...)", "fileIndex": 0, "line": 46,
+    "assembly": "Homeworks", "class": "Homework2", "reportPath": "Homeworks_Homework2.html", "methodName": "Homework2/MyList`1<value> Homework2::MaxList(Homework2/MyList`1<value>,value)", "methodShortName": "MaxList(...)", "fileIndex": 0, "line": 55,
+    "metrics": [
+      { "value": 5, "exceeded": false },
+      { "value": 16, "exceeded": false },
+      { "value": 30, "exceeded": true },
+    ]},
+  {
+    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray(value[])", "methodShortName": "MinMaxFromArray(...)", "fileIndex": 0, "line": 48,
+    "metrics": [
+      { "value": 5, "exceeded": false },
+      { "value": 16, "exceeded": false },
+      { "value": 30, "exceeded": true },
+    ]},
+  {
+    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray$W(Microsoft.FSharp.Core.FSharpFunc`2<value,Microsoft.FSharp.Core.FSharpFunc`2<value,a>>,value[])", "methodShortName": "MinMaxFromArray$W(...)", "fileIndex": 0, "line": 48,
     "metrics": [
       { "value": 5, "exceeded": false },
       { "value": 16, "exceeded": false },

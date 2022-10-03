@@ -1,4 +1,5 @@
 namespace Homeworks
+
 open Homework2
 //open System
 
@@ -83,5 +84,5 @@ module Main =
         | 4 -> printfn $"Answer is: %A{OddNumbersArray 0 10}"
 
         | _ -> printfn "Error"*)
-        printfn $"%A{QuickSort TrainingList4}"
+        printfn $"%A{OOPListToMyList (BubbleSortOOP TrainingListOOP)}"
         0
