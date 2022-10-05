@@ -17,8 +17,8 @@
         <Compile Include="AssemblyInfo.fs" />
         <None Include="App.config" />
         <Compile Include="Mylist.fs" />
-        <Compile Include="Main.fs" />
         <Compile Include="IList.fs" />
+        <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="Expecto.FsCheck" Version="9.0.4" />
