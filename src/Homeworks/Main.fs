@@ -1,6 +1,6 @@
 namespace Homeworks
-
 //open System
+
 module Main =
 
     // Simple exponentiation of a number.
@@ -57,6 +57,7 @@ module Main =
 
             max - min
 
+
     // Get an array of odd numbers between two given
     let OddNumbersArray (a: int) (b: int) =
         let min = if a < b then a else b
@@ -67,6 +68,7 @@ module Main =
                    if i % 2 <> 0 then i |]
 
         oddsArray
+
 
     [<EntryPoint>]
     let main (argv: string array) =
@@ -80,4 +82,5 @@ module Main =
         | 4 -> printfn $"Answer is: %A{OddNumbersArray 0 10}"
 
         | _ -> printfn "Error"*)
+
         0

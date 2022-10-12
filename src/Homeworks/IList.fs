@@ -25,35 +25,6 @@ let rec Concatenation (lst1: IList<'value>) (lst2: IList<'value>) =
     | :? MyOOPNonEmptyList<'value> as lst1 -> MyOOPNonEmptyList(lst1.Head, Concatenation lst1.Tail lst2)
     | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
 
-
-let TrainingListOOP: IList<int> =
-    MyOOPNonEmptyList(
-        2,
-        MyOOPNonEmptyList(
-            1,
-            MyOOPNonEmptyList(
-                9,
-                MyOOPNonEmptyList(
-                    11,
-                    MyOOPNonEmptyList(
-                        6,
-                        MyOOPNonEmptyList(
-                            5,
-                            MyOOPNonEmptyList(
-                                7,
-                                MyOOPNonEmptyList(
-                                    10,
-                                    MyOOPNonEmptyList(3, MyOOPNonEmptyList(4, MyOOPNonEmptyList(0, MyOOPEmptyList())))
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-
 /// The function receives OOPList and returns the value.
 let GetHeadFromOOP (lst: IList<'value>) : 'value =
     match lst with
@@ -120,9 +91,11 @@ let rec MinMaxList (lst: IList<'value>) selected bool =
         else if (lst.Head <= selected) = bool then
             Concatenation
                 (Concatenation newList (MyOOPNonEmptyList(lst.Head, MyOOPEmptyList())))
-                (MinMaxList (MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail)) selected bool)
+                (MinMaxList(MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail)) selected bool)
         else
-            Concatenation newList (MinMaxList (MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail)) selected bool)
+            Concatenation
+                newList
+                (MinMaxList(MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail)) selected bool)
     | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
 
 
@@ -136,10 +109,18 @@ let QuickSort (lst: IList<'value>) =
                 MyOOPNonEmptyList(lst.Head, MyOOPEmptyList())
             else
                 Concatenation
-                    (Concatenation
-                        (sort (MinMaxList (MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail)) lst.Head true))
-                        (MyOOPNonEmptyList(lst.Head, MyOOPEmptyList())))
-                    (sort (MinMaxList (MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail)) lst.Head false))
+                    (sort (
+                        MinMaxList(MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail)) lst.Head true
+                    ))
+                    (MyOOPNonEmptyList(
+                        lst.Head,
+                        sort (
+                            MinMaxList
+                                (MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail))
+                                lst.Head
+                                false
+                        )
+                    ))
         | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
 
     sort lst

@@ -14,6 +14,9 @@ let rec Concatenation (lst1: MyList<'value>) (lst2: MyList<'value>) =
 let TrainingList: MyList<int> =
     Cons(2, Cons(1, Cons(9, Cons(11, Cons(6, Cons(5, Cons(7, Cons(10, Cons(3, Cons(4, Cons(0, Empty)))))))))))
 
+let EmptyList1: MyList<'value> = Empty
+
+
 /// BubbleSort.(MyList type)
 let BubbleSort (lst: MyList<'value>) =
     let rec bubble (lst: MyList<'value>) (changer: bool) (newList: MyList<'value>) =
@@ -32,6 +35,7 @@ let BubbleSort (lst: MyList<'value>) =
 /// The function receives a list of type MyList, a value and bool variable(true - if we need a MinList, false - if we need a MaxList). Returns a list of elements less or greater than the given value.
 let rec MinMaxList (lst: MyList<'value>) selected bool =
     let newList: MyList<'value> = Empty
+
     match lst with
     | Empty -> Empty
     | Cons (hd, Empty) ->
@@ -41,7 +45,7 @@ let rec MinMaxList (lst: MyList<'value>) selected bool =
             Empty
     | Cons (hd1, Cons (hd2, tl)) ->
         if (hd1 <= selected) = bool then
-            Concatenation (Concatenation newList (Cons(hd1, Empty))) (MinMaxList(Cons(hd2, tl)) selected bool)
+            Concatenation newList (Cons(hd1, (MinMaxList(Cons(hd2, tl)) selected bool)))
         else
             Concatenation newList (MinMaxList(Cons(hd2, tl)) selected bool)
 
@@ -53,8 +57,7 @@ let QuickSort (lst: MyList<'value>) =
         | Cons (hd, Empty) -> Cons(hd, Empty)
         | Cons (hd1, Cons (hd2, tl)) ->
             Concatenation
-                (Concatenation (sort (MinMaxList(Cons(hd2, tl)) hd1 true)) (Cons(hd1, Empty)))
-                (sort (MinMaxList(Cons(hd2, tl)) hd1 false))
+                (sort (MinMaxList(Cons(hd2, tl)) hd1 true))
+                (Cons(hd1, sort (MinMaxList(Cons(hd2, tl)) hd1 false)))
 
     sort lst
-
