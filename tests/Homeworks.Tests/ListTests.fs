@@ -1,10 +1,11 @@
 ﻿namespace Homeworks.Tests
 
 open Expecto
-open FsCheck
 open Microsoft.FSharp.Core
 open MyListHomework
 open IListHomework
+
+
 
 module MyListTests =
     [<Tests>]
@@ -16,8 +17,9 @@ module MyListTests =
               testCase "Concatenation Empty with Empty"
               <| fun _ ->
                   let Result = MyListHomework.Concatenation Empty Empty
+
                   Expect.equal Result Empty "Empty list with empty list -> empty list"
-              testCase "Some MyList with some MyList"
+              testCase "Concatenation of some MyList with some MyList"
               <| fun _ ->
                   let Result =
                       MyListHomework.Concatenation
@@ -28,7 +30,7 @@ module MyListTests =
                   <| Result
                   <| Cons(3, Cons(0, Cons(1, Cons(2, Cons(14, Cons(10, Empty))))))
                   <| "Result should be: Cons(3, Cons(0, Cons(1, Cons(2, Cons(14, Cons(10, Empty))))))"
-              testCase "Empty ILIst with empty IList"
+              testCase "Concatenation of empty ILIst with empty IList"
               <| fun _ ->
                   let Result =
                       Concatenation
@@ -36,10 +38,10 @@ module MyListTests =
                       <| MyOOPEmptyList()
 
                   Expect.equal
-                  <| Result
-                  <| MyOOPEmptyList()
+                  <| OOPListToMyList(Result)
+                  <| Empty
                   <| "Empty IList with empty IList -> empty IList"
-              testCase "Some ILIst with some IList"
+              testCase "Concatenation of some ILIst with some IList"
               <| fun _ ->
                   let Result =
                       Concatenation
@@ -47,18 +49,9 @@ module MyListTests =
                       <| MyOOPNonEmptyList(4, MyOOPNonEmptyList(5, MyOOPNonEmptyList(6, MyOOPEmptyList())))
 
                   Expect.equal
-                  <| Result
-                  <| MyOOPNonEmptyList(
-                      1,
-                      MyOOPNonEmptyList(
-                          2,
-                          MyOOPNonEmptyList(
-                              3,
-                              MyOOPNonEmptyList(4, MyOOPNonEmptyList(5, MyOOPNonEmptyList(6, MyOOPEmptyList())))
-                          )
-                      )
-                  )
-                  <| "Empty IList with empty IList -> empty IList"
+                  <| OOPListToMyList(Result)
+                  <| Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Cons(6, Empty))))))
+                  <| "Result should be: Cons(1, Cons(2, Cons(3, Cons(4, Cons(5, Cons(6, Empty))))))"
               // Some easy tests of BubbleSort
               testCase "BubbleSort of some MyList"
               <| fun _ ->
@@ -101,8 +94,8 @@ module MyListTests =
                   let Result = BubbleSort(MyOOPEmptyList())
 
                   Expect.equal
-                  <| Result
-                  <| MyOOPEmptyList()
+                  <| OOPListToMyList(Result)
+                  <| Empty
                   <| "BubbleSort of MyOOPEmptyList should be: MyOOPEmptyList"
               // Some easy tests of QuickSort
               testCase "QuickSort of some MyList"
@@ -113,7 +106,7 @@ module MyListTests =
                   <| Result
                   <| Cons(7, Cons(8, Cons(9, Cons(10, Empty))))
                   <| "Result should be: Cons(7, Cons(8, Cons(9, Cons(10, Empty))))"
-              testCase "BubbleSort of empty MyList"
+              testCase "QuickSort of empty MyList"
               <| fun _ ->
                   let Result = MyListHomework.QuickSort(Empty)
 
@@ -121,7 +114,7 @@ module MyListTests =
                   <| Result
                   <| Empty
                   <| "Result should be: Empty"
-              testCase "BubbleSort of some ILIst"
+              testCase "QuickSort of some ILIst"
               <| fun _ ->
                   let Result =
                       QuickSort(
@@ -141,13 +134,36 @@ module MyListTests =
                   <| OOPListToMyList(Result)
                   <| Cons(5, Cons(6, Cons(7, Cons(8, Cons(9, Cons(10, Empty))))))
                   <| "Result should be: Cons(5, Cons(6, Cons(7, Cons(8, Cons(9, Cons(10, Empty))))))"
-              testCase "BubbleSort of empty IList"
+              testCase "QuickSort of empty IList"
               <| fun _ ->
                   let Result = QuickSort(MyOOPEmptyList())
 
                   Expect.equal
-                  <| Result
-                  <| MyOOPEmptyList()
+                  <| OOPListToMyList(Result)
+                  <| Empty
                   <| "BubbleSort of MyOOPEmptyList should be: MyOOPEmptyList"
               // Some fscheck tests
-              ]
+              testProperty "BubbleSort of MyList<int> doing the same with QuickSort"
+              <| fun (lst: MyList<int>) ->
+                  Expect.equal
+                  <| MyListHomework.BubbleSort(lst)
+                  <| MyListHomework.QuickSort(lst)
+                  <| "BubbleSort and QuickSort gave different results"
+              testProperty "BubbleSort of MyList<string> doing the same with QuickSort"
+              <| fun (lst: MyList<string>) ->
+                  Expect.equal
+                  <| MyListHomework.BubbleSort(lst)
+                  <| MyListHomework.QuickSort(lst)
+                  <| "BubbleSort and QuickSort gave different results"
+              testProperty "BubbleSort of IList<int> doing the same with QuickSort"
+              <| fun (lst: MyList<int>) ->
+                  Expect.equal
+                  <| OOPListToMyList(BubbleSort(MyListToOOPList(lst)))
+                  <| OOPListToMyList(QuickSort(MyListToOOPList(lst)))
+                  <| "BubbleSort and QuickSort gave different results"
+              testProperty "BubbleSort of IList<string> doing the same with QuickSort"
+              <| fun (lst: MyList<string>) ->
+                  Expect.equal
+                  <| OOPListToMyList(BubbleSort(MyListToOOPList(lst)))
+                  <| OOPListToMyList(BubbleSort(MyListToOOPList(lst)))
+                  <| "BubbleSort and QuickSort gave different results" ]

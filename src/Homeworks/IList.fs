@@ -74,7 +74,14 @@ let rec OOPListToMyList (lst: IList<'value>) =
     | :? MyOOPEmptyList<'value> -> Empty
     | :? MyOOPNonEmptyList<'value> as lst -> Cons(lst.Head, OOPListToMyList lst.Tail)
     | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
+/// The function receives a list of type MyList and returns a list of type IList.
+let rec MyListToOOPList (lst: MyList<'value>) =
+    match lst with
+    | Empty -> MyOOPEmptyList() :> IList<'value>
+    | Cons (hd, tl) -> MyOOPNonEmptyList(hd, MyListToOOPList tl)
 
+
+let list: list<int> = [ 1; 1; 1; 1; 1 ]
 
 /// The function receives a list of type IList and a value and bool variable(true - if we need a MinList, false - if we need a MaxList). Returns a list of elements less or greater than the given value.
 let rec MinMaxList (lst: IList<'value>) selected bool =
