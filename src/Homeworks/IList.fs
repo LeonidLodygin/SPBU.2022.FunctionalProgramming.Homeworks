@@ -23,13 +23,13 @@ let rec Concatenation (lst1: IList<'value>) (lst2: IList<'value>) =
     match lst1 with
     | :? EmptyList<'value> -> lst2
     | :? List<'value> as lst1 -> List(lst1.Head, Concatenation lst1.Tail lst2)
-    | _ -> failwith "Use only EmptyList or List types"
+    | _ -> failwith $"This type %A{lst1.GetType()} is not allowed to be used. Use only EmptyList or List types"
 
 /// The function receives OOPList and returns the value.
 let Head (lst: IList<'value>) : 'value =
     match lst with
     | :? List<'value> as lst -> lst.Head
-    | _ -> failwith "Use only EmptyList or List types"
+    | _ -> failwith $"This type %A{lst.GetType()} is not allowed to be used Use only EmptyList or List types"
 
 /// The function receives OOPList and returns the tail.
 let Tail (lst: IList<'value>) : IList<'value> =
@@ -39,7 +39,7 @@ let Tail (lst: IList<'value>) : IList<'value> =
             EmptyList()
         else
             lst.Tail
-    | _ -> failwith "Use only EmptyList or List types"
+    | _ -> failwith $"This type %A{lst.GetType()} is not allowed to be used Use only EmptyList or List types"
 
 /// BubbleSort.(IList type)
 let BubbleSort (lst: IList<'value>) =
@@ -58,7 +58,7 @@ let BubbleSort (lst: IList<'value>) =
                     (List(Head lst.Tail, Tail lst.Tail))
                     changer
                     (Concatenation newList (List(lst.Head, EmptyList())))
-        | _ -> failwith "Use only EmptyList or List types"
+        | _ -> failwith $"This type %A{lst.GetType()} is not allowed to be used Use only EmptyList or List types"
 
     bubble lst false (EmptyList())
 
@@ -68,7 +68,7 @@ let rec OOPListToMyList (lst: IList<'value>) =
     match lst with
     | :? EmptyList<'value> -> Empty
     | :? List<'value> as lst -> Cons(lst.Head, OOPListToMyList lst.Tail)
-    | _ -> failwith "Use only EmptyList or List types"
+    | _ -> failwith $"This type %A{lst.GetType()} is not allowed to be used. Use only EmptyList or List types"
 /// The function receives a list of type MyList and returns a list of type IList.
 let rec MyListToOOPList (lst: MyList<'value>) =
     match lst with
@@ -87,7 +87,7 @@ let rec MinMaxList (lst: IList<'value>) selected =
             List(lst.Head, fst tailMinMax), snd tailMinMax
         else
             fst tailMinMax, List(lst.Head, snd tailMinMax)
-    | _ -> failwith "Use only EmptyList or List types"
+    | _ -> failwith $"This type %A{lst.GetType()} is not allowed to be used. Use only EmptyList or List types"
 
 
 ///QuickSort.(IList type)
@@ -102,6 +102,6 @@ let QuickSort (lst: IList<'value>) =
                 Concatenation
                     (sort (fst (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head)))
                     (List(lst.Head, sort (snd (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head))))
-        | _ -> failwith "Use only EmptyList or List types"
+        | _ -> failwith $"This type %A{lst.GetType()} is not allowed to be used. Use only EmptyList or List types"
 
     sort lst
