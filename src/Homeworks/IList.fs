@@ -9,125 +9,106 @@ type IList<'value> =
     end
 
 /// OOPList with some value and tail
-type MyOOPNonEmptyList<'value>(head: 'value, tail: IList<'value>) =
+type List<'value>(head: 'value, tail: IList<'value>) =
     interface IList<'value>
     member this.Head = head
     member this.Tail = tail
 
 /// Empty OOPList
-type MyOOPEmptyList<'value>() =
+type EmptyList<'value>() =
     interface IList<'value>
 
 /// The function receives two lists of type IList as input and returns their union. (The second list is appended to the end of the first)
 let rec Concatenation (lst1: IList<'value>) (lst2: IList<'value>) =
     match lst1 with
-    | :? MyOOPEmptyList<'value> -> lst2
-    | :? MyOOPNonEmptyList<'value> as lst1 -> MyOOPNonEmptyList(lst1.Head, Concatenation lst1.Tail lst2)
-    | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
+    | :? EmptyList<'value> -> lst2
+    | :? List<'value> as lst1 -> List(lst1.Head, Concatenation lst1.Tail lst2)
+    | _ -> failwith "Use only EmptyList or List types"
 
 /// The function receives OOPList and returns the value.
-let GetHeadFromOOP (lst: IList<'value>) : 'value =
+let Head (lst: IList<'value>) : 'value =
     match lst with
-    | :? MyOOPNonEmptyList<'value> as lst -> lst.Head
-    | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
+    | :? List<'value> as lst -> lst.Head
+    | _ -> failwith "Use only EmptyList or List types"
 
 /// The function receives OOPList and returns the tail.
-let GetTailFromOOP (lst: IList<'value>) : IList<'value> =
+let Tail (lst: IList<'value>) : IList<'value> =
     match lst with
-    | :? MyOOPNonEmptyList<'value> as lst ->
-        if lst.Tail :? MyOOPEmptyList<'value> then
-            MyOOPEmptyList()
+    | :? List<'value> as lst ->
+        if lst.Tail :? EmptyList<'value> then
+            EmptyList()
         else
             lst.Tail
-    | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
+    | _ -> failwith "Use only EmptyList or List types"
 
 /// BubbleSort.(IList type)
 let BubbleSort (lst: IList<'value>) =
     let rec bubble (lst: IList<'value>) (changer: bool) (newList: IList<'value>) =
-        match lst, changer with
-        | :? MyOOPEmptyList<'value>, _ -> MyOOPEmptyList() :> IList<'value>
-        | :? MyOOPNonEmptyList<'value> as lst, _ ->
-            if lst.Tail :? MyOOPEmptyList<'value>
-               && changer = false then
-                Concatenation newList (MyOOPNonEmptyList(lst.Head, MyOOPEmptyList()))
-            elif lst.Tail :? MyOOPEmptyList<'value>
-                 && changer = true then
-                bubble (Concatenation newList (MyOOPNonEmptyList(lst.Head, MyOOPEmptyList()))) false (MyOOPEmptyList())
-            else if lst.Head > GetHeadFromOOP lst.Tail then
-                bubble
-                    (MyOOPNonEmptyList(lst.Head, GetTailFromOOP lst.Tail))
-                    true
-                    (Concatenation newList (MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, MyOOPEmptyList())))
+        match lst with
+        | :? EmptyList<'value> -> EmptyList() :> IList<'value>
+        | :? List<'value> as lst ->
+            if lst.Tail :? EmptyList<'value> && not changer then
+                Concatenation newList (List(lst.Head, EmptyList()))
+            elif lst.Tail :? EmptyList<'value> && changer then
+                bubble (Concatenation newList (List(lst.Head, EmptyList()))) false (EmptyList())
+            else if lst.Head > Head lst.Tail then
+                bubble (List(lst.Head, Tail lst.Tail)) true (Concatenation newList (List(Head lst.Tail, EmptyList())))
             else
                 bubble
-                    (MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail))
-                    (false || changer)
-                    (Concatenation newList (MyOOPNonEmptyList(lst.Head, MyOOPEmptyList())))
-        | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
+                    (List(Head lst.Tail, Tail lst.Tail))
+                    changer
+                    (Concatenation newList (List(lst.Head, EmptyList())))
+        | _ -> failwith "Use only EmptyList or List types"
 
-    bubble lst false (MyOOPEmptyList())
+    bubble lst false (EmptyList())
 
 
 /// The function receives a list of type IList and returns a list of type MyList.
 let rec OOPListToMyList (lst: IList<'value>) =
     match lst with
-    | :? MyOOPEmptyList<'value> -> Empty
-    | :? MyOOPNonEmptyList<'value> as lst -> Cons(lst.Head, OOPListToMyList lst.Tail)
-    | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
+    | :? EmptyList<'value> -> Empty
+    | :? List<'value> as lst -> Cons(lst.Head, OOPListToMyList lst.Tail)
+    | _ -> failwith "Use only EmptyList or List types"
 /// The function receives a list of type MyList and returns a list of type IList.
 let rec MyListToOOPList (lst: MyList<'value>) =
     match lst with
-    | Empty -> MyOOPEmptyList() :> IList<'value>
-    | Cons (hd, tl) -> MyOOPNonEmptyList(hd, MyListToOOPList tl)
+    | Empty -> EmptyList() :> IList<'value>
+    | Cons (hd, tl) -> List(hd, MyListToOOPList tl)
 
-
-let list: list<int> = [ 1; 1; 1; 1; 1 ]
 
 /// The function receives a list of type IList and a value and bool variable(true - if we need a MinList, false - if we need a MaxList). Returns a list of elements less or greater than the given value.
 let rec MinMaxList (lst: IList<'value>) selected bool =
-    let newList: IList<'value> = MyOOPEmptyList()
+    let newList: IList<'value> = EmptyList()
 
     match lst with
-    | :? MyOOPEmptyList<'value> -> MyOOPEmptyList() :> IList<'value>
-    | :? MyOOPNonEmptyList<'value> as lst ->
-        if lst.Tail :? MyOOPEmptyList<'value> then
+    | :? EmptyList<'value> -> EmptyList() :> IList<'value>
+    | :? List<'value> as lst ->
+        if lst.Tail :? EmptyList<'value> then
             if (lst.Head <= selected) = bool then
-                Concatenation newList (MyOOPNonEmptyList(lst.Head, MyOOPEmptyList()))
+                Concatenation newList (List(lst.Head, EmptyList()))
             else
-                MyOOPEmptyList()
+                EmptyList()
         else if (lst.Head <= selected) = bool then
             Concatenation
-                (Concatenation newList (MyOOPNonEmptyList(lst.Head, MyOOPEmptyList())))
-                (MinMaxList(MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail)) selected bool)
+                (Concatenation newList (List(lst.Head, EmptyList())))
+                (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) selected bool)
         else
-            Concatenation
-                newList
-                (MinMaxList(MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail)) selected bool)
-    | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
+            Concatenation newList (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) selected bool)
+    | _ -> failwith "Use only EmptyList or List types"
 
 
 ///QuickSort.(IList type)
 let QuickSort (lst: IList<'value>) =
     let rec sort (lst: IList<'value>) =
         match lst with
-        | :? MyOOPEmptyList<'value> -> MyOOPEmptyList() :> IList<'value>
-        | :? MyOOPNonEmptyList<'value> as lst ->
-            if lst.Tail :? MyOOPEmptyList<'value> then
-                MyOOPNonEmptyList(lst.Head, MyOOPEmptyList())
+        | :? EmptyList<'value> -> EmptyList() :> IList<'value>
+        | :? List<'value> as lst ->
+            if lst.Tail :? EmptyList<'value> then
+                List(lst.Head, EmptyList())
             else
                 Concatenation
-                    (sort (
-                        MinMaxList(MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail)) lst.Head true
-                    ))
-                    (MyOOPNonEmptyList(
-                        lst.Head,
-                        sort (
-                            MinMaxList
-                                (MyOOPNonEmptyList(GetHeadFromOOP lst.Tail, GetTailFromOOP lst.Tail))
-                                lst.Head
-                                false
-                        )
-                    ))
-        | _ -> failwith "Use only MyOOPEmptyList or MyOOPNonEmptyList types"
+                    (sort (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head true))
+                    (List(lst.Head, sort (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head false)))
+        | _ -> failwith "Use only EmptyList or List types"
 
     sort lst

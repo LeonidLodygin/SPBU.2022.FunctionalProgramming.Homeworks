@@ -225,8 +225,8 @@ var assemblies = [
     "name": "Homeworks",
     "classes": [
       { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 25, "ucl": 11, "cal": 36, "tl": 86, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
-      { "name": "IListHomework", "rp": "Homeworks_IListHomework.html", "cl": 68, "ucl": 8, "cal": 76, "tl": 133, "ct": "LineCoverage", "mc": "-", "cb": 39, "tb": 48, "lch": [], "bch": [], "hc": [] },
-      { "name": "MyListHomework", "rp": "Homeworks_MyListHomework.html", "cl": 26, "ucl": 1, "cal": 27, "tl": 63, "ct": "LineCoverage", "mc": "-", "cb": 22, "tb": 24, "lch": [], "bch": [], "hc": [] },
+      { "name": "IListHomework", "rp": "Homeworks_IListHomework.html", "cl": 51, "ucl": 8, "cal": 59, "tl": 114, "ct": "LineCoverage", "mc": "-", "cb": 38, "tb": 46, "lch": [], "bch": [], "hc": [] },
+      { "name": "MyListHomework", "rp": "Homeworks_MyListHomework.html", "cl": 26, "ucl": 1, "cal": 27, "tl": 58, "ct": "LineCoverage", "mc": "-", "cb": 21, "tb": 22, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
@@ -239,13 +239,6 @@ var riskHotspotMetrics = [
 ];
 
 var riskHotspots = [
-  {
-    "assembly": "Homeworks", "class": "IListHomework", "reportPath": "Homeworks_IListHomework.html", "methodName": "IListHomework/IList`1<value> IListHomework/bubble@47-1::Invoke(IListHomework/IList`1<value>,System.Boolean,IListHomework/IList`1<value>)", "methodShortName": "Invoke(...)", "fileIndex": 0, "line": 47,
-    "metrics": [
-      { "value": 9, "exceeded": false },
-      { "value": 256, "exceeded": true },
-      { "value": 9.02, "exceeded": false },
-    ]},
   {
     "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray(value[])", "methodShortName": "MinMaxFromArray(...)", "fileIndex": 0, "line": 46,
     "metrics": [

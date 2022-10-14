@@ -11,11 +11,6 @@ let rec Concatenation (lst1: MyList<'value>) (lst2: MyList<'value>) =
     | Empty -> lst2
     | Cons (hd, tl) -> Cons(hd, Concatenation tl lst2)
 
-let TrainingList: MyList<int> =
-    Cons(2, Cons(1, Cons(9, Cons(11, Cons(6, Cons(5, Cons(7, Cons(10, Cons(3, Cons(4, Cons(0, Empty)))))))))))
-
-let EmptyList1: MyList<'value> = Empty
-
 
 /// BubbleSort.(MyList type)
 let BubbleSort (lst: MyList<'value>) =
@@ -28,7 +23,7 @@ let BubbleSort (lst: MyList<'value>) =
             if hd1 > hd2 then
                 bubble (Cons(hd1, tl)) true (Concatenation newList (Cons(hd2, Empty)))
             else
-                bubble (Cons(hd2, tl)) (false || changer) (Concatenation newList (Cons(hd1, Empty)))
+                bubble (Cons(hd2, tl)) changer (Concatenation newList (Cons(hd1, Empty)))
 
     bubble lst false Empty
 

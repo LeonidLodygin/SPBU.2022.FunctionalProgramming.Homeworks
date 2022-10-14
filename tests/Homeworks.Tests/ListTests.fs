@@ -32,10 +32,7 @@ module MyListTests =
                   <| "Result should be: Cons(3, Cons(0, Cons(1, Cons(2, Cons(14, Cons(10, Empty))))))"
               testCase "Concatenation of empty ILIst with empty IList"
               <| fun _ ->
-                  let Result =
-                      Concatenation
-                      <| MyOOPEmptyList()
-                      <| MyOOPEmptyList()
+                  let Result = Concatenation <| EmptyList() <| EmptyList()
 
                   Expect.equal
                   <| OOPListToMyList(Result)
@@ -45,8 +42,8 @@ module MyListTests =
               <| fun _ ->
                   let Result =
                       Concatenation
-                      <| MyOOPNonEmptyList(1, MyOOPNonEmptyList(2, MyOOPNonEmptyList(3, MyOOPEmptyList())))
-                      <| MyOOPNonEmptyList(4, MyOOPNonEmptyList(5, MyOOPNonEmptyList(6, MyOOPEmptyList())))
+                      <| List(1, List(2, List(3, EmptyList())))
+                      <| List(4, List(5, List(6, EmptyList())))
 
                   Expect.equal
                   <| OOPListToMyList(Result)
@@ -72,18 +69,7 @@ module MyListTests =
               testCase "BubbleSort of some ILIst"
               <| fun _ ->
                   let Result =
-                      BubbleSort(
-                          MyOOPNonEmptyList(
-                              10,
-                              MyOOPNonEmptyList(
-                                  9,
-                                  MyOOPNonEmptyList(
-                                      8,
-                                      MyOOPNonEmptyList(7, MyOOPNonEmptyList(6, MyOOPNonEmptyList(5, MyOOPEmptyList())))
-                                  )
-                              )
-                          )
-                      )
+                      BubbleSort(List(10, List(9, List(8, List(7, List(6, List(5, EmptyList())))))))
 
                   Expect.equal
                   <| OOPListToMyList(Result)
@@ -91,7 +77,7 @@ module MyListTests =
                   <| "Result should be: Cons(5, Cons(6, Cons(7, Cons(8, Cons(9, Cons(10, Empty))))))"
               testCase "BubbleSort of empty IList"
               <| fun _ ->
-                  let Result = BubbleSort(MyOOPEmptyList())
+                  let Result = BubbleSort(EmptyList())
 
                   Expect.equal
                   <| OOPListToMyList(Result)
@@ -117,18 +103,7 @@ module MyListTests =
               testCase "QuickSort of some ILIst"
               <| fun _ ->
                   let Result =
-                      QuickSort(
-                          MyOOPNonEmptyList(
-                              10,
-                              MyOOPNonEmptyList(
-                                  9,
-                                  MyOOPNonEmptyList(
-                                      8,
-                                      MyOOPNonEmptyList(7, MyOOPNonEmptyList(6, MyOOPNonEmptyList(5, MyOOPEmptyList())))
-                                  )
-                              )
-                          )
-                      )
+                      QuickSort(List(10, List(9, List(8, List(7, List(6, List(5, EmptyList())))))))
 
                   Expect.equal
                   <| OOPListToMyList(Result)
@@ -136,7 +111,7 @@ module MyListTests =
                   <| "Result should be: Cons(5, Cons(6, Cons(7, Cons(8, Cons(9, Cons(10, Empty))))))"
               testCase "QuickSort of empty IList"
               <| fun _ ->
-                  let Result = QuickSort(MyOOPEmptyList())
+                  let Result = QuickSort(EmptyList())
 
                   Expect.equal
                   <| OOPListToMyList(Result)
