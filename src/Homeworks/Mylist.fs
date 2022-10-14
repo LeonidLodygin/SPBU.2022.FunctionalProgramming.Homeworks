@@ -27,22 +27,22 @@ let BubbleSort (lst: MyList<'value>) =
 
     bubble lst false Empty
 
-/// The function receives a list of type MyList, a value and bool variable(true - if we need a MinList, false - if we need a MaxList). Returns a list of elements less or greater than the given value.
-let rec MinMaxList (lst: MyList<'value>) selected bool =
-    let newList: MyList<'value> = Empty
-
+/// The function receives a list of type MyList, a value. Returns a cortege with two lists of elements less or greater than the given value.
+let rec MinMaxList (lst: MyList<'value>) selected =
     match lst with
-    | Empty -> Empty
-    | Cons (hd, Empty) ->
-        if (hd <= selected) = bool then
-            Concatenation newList (Cons(hd, Empty))
+    | Empty -> Empty, Empty
+    | Cons (hd, tl) ->
+        let tailMinMax = MinMaxList tl selected
+
+        if hd <= selected then
+            Cons(hd, fst tailMinMax), snd tailMinMax
         else
-            Empty
-    | Cons (hd1, Cons (hd2, tl)) ->
-        if (hd1 <= selected) = bool then
-            Concatenation newList (Cons(hd1, (MinMaxList(Cons(hd2, tl)) selected bool)))
-        else
-            Concatenation newList (MinMaxList(Cons(hd2, tl)) selected bool)
+            fst tailMinMax, Cons(hd, snd tailMinMax)
+
+
+let lst =
+    Cons(5, Cons(1, Cons(11, Cons(165, Cons(0, Cons(2, Cons(16, Cons(-1, Cons(111, Cons(12, Empty))))))))))
+
 
 /// QuickSort.(MyList type)
 let QuickSort (lst: MyList<'value>) =
@@ -52,7 +52,7 @@ let QuickSort (lst: MyList<'value>) =
         | Cons (hd, Empty) -> Cons(hd, Empty)
         | Cons (hd1, Cons (hd2, tl)) ->
             Concatenation
-                (sort (MinMaxList(Cons(hd2, tl)) hd1 true))
-                (Cons(hd1, sort (MinMaxList(Cons(hd2, tl)) hd1 false)))
+                (sort (fst (MinMaxList(Cons(hd2, tl)) hd1)))
+                (Cons(hd1, sort (snd (MinMaxList(Cons(hd2, tl)) hd1))))
 
     sort lst

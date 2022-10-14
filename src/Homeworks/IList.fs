@@ -76,24 +76,17 @@ let rec MyListToOOPList (lst: MyList<'value>) =
     | Cons (hd, tl) -> List(hd, MyListToOOPList tl)
 
 
-/// The function receives a list of type IList and a value and bool variable(true - if we need a MinList, false - if we need a MaxList). Returns a list of elements less or greater than the given value.
-let rec MinMaxList (lst: IList<'value>) selected bool =
-    let newList: IList<'value> = EmptyList()
+/// The function receives a list of type IList and a value. Returns a cortege with two lists of elements less or greater than the given value.
+let rec MinMaxList (lst: IList<'value>) selected =
 
     match lst with
-    | :? EmptyList<'value> -> EmptyList() :> IList<'value>
+    | :? EmptyList<'value> -> EmptyList() :> IList<'value>, EmptyList() :> IList<'value>
     | :? List<'value> as lst ->
-        if lst.Tail :? EmptyList<'value> then
-            if (lst.Head <= selected) = bool then
-                Concatenation newList (List(lst.Head, EmptyList()))
-            else
-                EmptyList()
-        else if (lst.Head <= selected) = bool then
-            Concatenation
-                (Concatenation newList (List(lst.Head, EmptyList())))
-                (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) selected bool)
+        let tailMinMax = MinMaxList lst.Tail selected
+        if lst.Head <= selected then
+            List(lst.Head, fst tailMinMax), snd tailMinMax
         else
-            Concatenation newList (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) selected bool)
+            fst tailMinMax, List(lst.Head, snd tailMinMax)
     | _ -> failwith "Use only EmptyList or List types"
 
 
@@ -107,8 +100,8 @@ let QuickSort (lst: IList<'value>) =
                 List(lst.Head, EmptyList())
             else
                 Concatenation
-                    (sort (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head true))
-                    (List(lst.Head, sort (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head false)))
+                    (sort (fst (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head)))
+                    (List(lst.Head, sort (snd (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head))))
         | _ -> failwith "Use only EmptyList or List types"
 
     sort lst
