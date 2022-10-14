@@ -40,10 +40,6 @@ let rec MinMaxList (lst: MyList<'value>) selected =
             fst tailMinMax, Cons(hd, snd tailMinMax)
 
 
-let lst =
-    Cons(5, Cons(1, Cons(11, Cons(165, Cons(0, Cons(2, Cons(16, Cons(-1, Cons(111, Cons(12, Empty))))))))))
-
-
 /// QuickSort.(MyList type)
 let QuickSort (lst: MyList<'value>) =
     let rec sort (lst: MyList<'value>) =
