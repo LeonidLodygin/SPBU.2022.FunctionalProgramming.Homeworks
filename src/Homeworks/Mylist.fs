@@ -47,8 +47,7 @@ let QuickSort (lst: MyList<'value>) =
         | Empty -> Empty
         | Cons (hd, Empty) -> Cons(hd, Empty)
         | Cons (hd1, Cons (hd2, tl)) ->
-            Concatenation
-                (sort (fst (MinMaxList(Cons(hd2, tl)) hd1)))
-                (Cons(hd1, sort (snd (MinMaxList(Cons(hd2, tl)) hd1))))
+            let tailMinMax = MinMaxList(Cons(hd2, tl)) hd1
+            Concatenation(sort (fst tailMinMax)) (Cons(hd1, sort (snd tailMinMax)))
 
     sort lst

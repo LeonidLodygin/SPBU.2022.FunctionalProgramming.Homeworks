@@ -83,6 +83,7 @@ let rec MinMaxList (lst: IList<'value>) selected =
     | :? EmptyList<'value> -> EmptyList() :> IList<'value>, EmptyList() :> IList<'value>
     | :? List<'value> as lst ->
         let tailMinMax = MinMaxList lst.Tail selected
+
         if lst.Head <= selected then
             List(lst.Head, fst tailMinMax), snd tailMinMax
         else
@@ -99,9 +100,8 @@ let QuickSort (lst: IList<'value>) =
             if lst.Tail :? EmptyList<'value> then
                 List(lst.Head, EmptyList())
             else
-                Concatenation
-                    (sort (fst (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head)))
-                    (List(lst.Head, sort (snd (MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head))))
+                let tailMinMax = MinMaxList(List(Head lst.Tail, Tail lst.Tail)) lst.Head
+                Concatenation(sort (fst tailMinMax)) (List(lst.Head, sort (snd tailMinMax)))
         | _ -> failwith $"This type %A{lst.GetType()} is not allowed to be used. Use only EmptyList or List types"
 
     sort lst
