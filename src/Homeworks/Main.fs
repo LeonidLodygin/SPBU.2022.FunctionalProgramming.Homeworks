@@ -82,5 +82,4 @@ module Main =
         | 4 -> printfn $"Answer is: %A{OddNumbersArray 0 10}"
 
         | _ -> printfn "Error"*)
-        printfn $"%A{TreeHomework.MyListOfTree TreeHomework.TrainingTree}"
         0

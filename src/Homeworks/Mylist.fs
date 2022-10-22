@@ -5,6 +5,11 @@ type MyList<'value> =
     | Cons of head: 'value * tail: MyList<'value>
     | Empty
 
+let rec Length (lst: MyList<'value>) =
+    match lst with
+    | Empty -> 0
+    | Cons(hd, tl) -> 1 + (Length tl)
+
 /// The function receives two lists of type MyList as input and returns their union. (The second list is appended to the end of the first)
 let rec Concatenation (lst1: MyList<'value>) (lst2: MyList<'value>) =
     match lst1 with
