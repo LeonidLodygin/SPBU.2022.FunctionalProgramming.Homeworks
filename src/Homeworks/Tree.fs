@@ -3,10 +3,12 @@
 open System.Collections.Generic
 open MyListHomework
 
+/// Tree with arbitrary number of children
 type ArbitraryTree<'value> =
     | Node of value: 'value * nodes: array<ArbitraryTree<'value>>
     | Leaf of value: 'value
 
+/// Function receives a tree of type ArbitraryTree, iterates through it and sends the values from the nodes and leaves to the HashMap
 let NumOfDifferentValues (tree: ArbitraryTree<'value>) =
     let hashSet = new HashSet<'value>()
 
@@ -22,6 +24,7 @@ let NumOfDifferentValues (tree: ArbitraryTree<'value>) =
     Counter(tree)
     hashSet.Count
 
+/// Function receives a tree of type ArbitraryTree and returns list of type MyList of values from nodes and leaves
 let rec MyListOfTree (tree: ArbitraryTree<'value>) =
     match tree with
     | Leaf value -> Cons(value, Empty)
