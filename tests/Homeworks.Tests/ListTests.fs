@@ -153,4 +153,10 @@ module MyListTests =
                   Expect.equal
                   <| MyListHomework.Concatenation lst lst2
                   <| ListToMyList(MyListToList lst @ MyListToList lst2)
-                  <| "Concatenation and built-in function of concatenation gave different results" ]
+                  <| "Concatenation and built-in function of concatenation gave different results"
+              testProperty "Comparing length of concatenation of two lists with sum of lengths of two lists"
+              <| fun (lst: MyList<int>) (lst2: MyList<int>) ->
+                  Expect.equal
+                  <| Length(MyListHomework.Concatenation lst lst2)
+                  <| Length lst + Length lst2
+                  <| "Length of concatenation should be equal with lengths of two lists" ]

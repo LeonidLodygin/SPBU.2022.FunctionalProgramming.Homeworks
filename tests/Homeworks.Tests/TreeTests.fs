@@ -97,7 +97,6 @@ module TreeTests =
               testProperty "Compare length of MyList from tree with number of different values in tree"
               <| fun (tree: ArbitraryTree<int>) ->
                   Expect.isGreaterThanOrEqual
-                  <| Length (MyListOfTree tree)
+                  <| Length(MyListOfTree tree)
                   <| NumOfDifferentValues tree
-                  <| "Length of MyList should be greater or equal to the number of different values"
-                      ]
+                  <| "Length of MyList should be greater or equal to the number of different values" ]

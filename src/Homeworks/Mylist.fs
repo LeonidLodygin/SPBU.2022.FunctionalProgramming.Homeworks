@@ -8,7 +8,7 @@ type MyList<'value> =
 let rec Length (lst: MyList<'value>) =
     match lst with
     | Empty -> 0
-    | Cons(hd, tl) -> 1 + (Length tl)
+    | Cons (hd, tl) -> 1 + (Length tl)
 
 /// The function receives two lists of type MyList as input and returns their union. (The second list is appended to the end of the first)
 let rec Concatenation (lst1: MyList<'value>) (lst2: MyList<'value>) =
