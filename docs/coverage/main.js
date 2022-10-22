@@ -225,6 +225,8 @@ var assemblies = [
     "name": "Homeworks",
     "classes": [
       { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 25, "ucl": 11, "cal": 36, "tl": 86, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
+      { "name": "IListHomework", "rp": "Homeworks_IListHomework.html", "cl": 45, "ucl": 7, "cal": 52, "tl": 107, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 42, "lch": [], "bch": [], "hc": [] },
+      { "name": "MyListHomework", "rp": "Homeworks_MyListHomework.html", "cl": 32, "ucl": 0, "cal": 32, "tl": 69, "ct": "LineCoverage", "mc": "-", "cb": 24, "tb": 24, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 
