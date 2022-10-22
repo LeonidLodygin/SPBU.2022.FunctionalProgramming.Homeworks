@@ -11,6 +11,17 @@ let rec Concatenation (lst1: MyList<'value>) (lst2: MyList<'value>) =
     | Empty -> lst2
     | Cons (hd, tl) -> Cons(hd, Concatenation tl lst2)
 
+/// The function receives a list of type MyList and returns the same list of built-in type List.
+let rec MyListToList (lst: MyList<'value>) =
+    match lst with
+    | Empty -> []
+    | Cons (hd, tl) -> hd :: (MyListToList tl)
+
+/// The function receives a list of built-in type List and returns the same list of type MyList.
+let rec ListToMyList (lst: List<'value>) =
+    match lst with
+    | [] -> Empty
+    | hd :: tl -> Cons(hd, ListToMyList tl)
 
 /// BubbleSort.(MyList type)
 let BubbleSort (lst: MyList<'value>) =
@@ -46,8 +57,8 @@ let QuickSort (lst: MyList<'value>) =
         match lst with
         | Empty -> Empty
         | Cons (hd, Empty) -> Cons(hd, Empty)
-        | Cons (hd1, Cons (hd2, tl)) ->
-            let tailMinMax = MinMaxList(Cons(hd2, tl)) hd1
+        | Cons (hd1, tl) ->
+            let tailMinMax = MinMaxList tl hd1
             Concatenation(sort (fst tailMinMax)) (Cons(hd1, sort (snd tailMinMax)))
 
     sort lst

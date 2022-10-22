@@ -141,4 +141,16 @@ module MyListTests =
                   Expect.equal
                   <| OOPListToMyList(BubbleSort(MyListToOOPList(lst)))
                   <| OOPListToMyList(BubbleSort(MyListToOOPList(lst)))
-                  <| "BubbleSort and QuickSort gave different results" ]
+                  <| "BubbleSort and QuickSort gave different results"
+              testProperty "Concatenation of MyList<int> doing the same with built-in function"
+              <| fun (lst: MyList<int>) (lst2: MyList<int>) ->
+                  Expect.equal
+                  <| MyListHomework.Concatenation lst lst2
+                  <| ListToMyList(MyListToList lst @ MyListToList lst2)
+                  <| "Concatenation and built-in function of concatenation gave different results"
+              testProperty "Concatenation of MyList<string> doing the same with built-in function"
+              <| fun (lst: MyList<string>) (lst2: MyList<string>) ->
+                  Expect.equal
+                  <| MyListHomework.Concatenation lst lst2
+                  <| ListToMyList(MyListToList lst @ MyListToList lst2)
+                  <| "Concatenation and built-in function of concatenation gave different results" ]
