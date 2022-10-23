@@ -3,22 +3,22 @@
 
 // Simple exponentiation of a number.
 let SimplePow (n: float) a =
-        // Checking the base and exponent. We don't want to multiply 0 or 1 by itself.
-        if n = 0.0 && a = 0 then
-            failwith "0 to the power of 0 is uncertainty"
-        elif n = 0.0 then
-            0.0
-        elif n = 1.0 then
-            1.0
-        else
-            let mutable ans = 1.0
+    // Checking the base and exponent. We don't want to multiply 0 or 1 by itself.
+    if n = 0.0 && a = 0 then
+        failwith "0 to the power of 0 is uncertainty"
+    elif n = 0.0 then
+        0.0
+    elif n = 1.0 then
+        1.0
+    else
+        let mutable ans = 1.0
 
-            for i = 1 to abs a do
-                ans <- n * ans
+        for i = 1 to abs a do
+            ans <- n * ans
 
-            if a > 0 then ans else (1.0 / ans)
+        if a > 0 then ans else (1.0 / ans)
 
-    // Fast exponentiation of a number
+// Fast exponentiation of a number
 let rec FastPow (n: float) (a: int) =
     // Checking the base and exponent. We don't want to multiply 0 or 1 by itself.
     if n = 0.0 && a = 0 then

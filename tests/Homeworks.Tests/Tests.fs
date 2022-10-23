@@ -43,12 +43,13 @@ module SayTests =
               testCase "array [|5.5; 5.5; 5.5; 5.5; 5.5; 5.5; 5.5|]"
               <| fun _ ->
                   let (Result: float) =
-                      FirstHomework.MinMaxFromArray [| 5.5;5.5
-                                              ;5.5
-                                              ;5.5
-                                              ;5.5
-                                              ;5.5
-                                              ;5.5 |]
+                      FirstHomework.MinMaxFromArray [| 5.5
+                                                       5.5
+                                                       5.5
+                                                       5.5
+                                                       5.5
+                                                       5.5
+                                                       5.5 |]
 
                   Expect.equal Result 0 "For array [|5; 5; 5; 5; 5; 5; 5|] answer is 0"
               //int
@@ -56,12 +57,12 @@ module SayTests =
               <| fun _ ->
                   let Result =
                       FirstHomework.MinMaxFromArray [| 121
-                                              ;20
-                                              ;3
-                                              ;-102
-                                              ;54
-                                              ;6
-                                              ;-78 |]
+                                                       20
+                                                       3
+                                                       -102
+                                                       54
+                                                       6
+                                                       -78 |]
 
                   Expect.equal Result 223 "For array [|121; 20; 3; -102; 54; 6; -78|] answer is 223"
               //byte
@@ -69,8 +70,8 @@ module SayTests =
               <| fun _ ->
                   let (Result: byte) =
                       FirstHomework.MinMaxFromArray [| 37uy
-                                              ;121uy
-                                              ;10uy |]
+                                                       121uy
+                                                       10uy |]
 
                   Expect.equal Result 111uy "For array [|37uy;121uy;10uy|] answer is 111uy"
               //uint16
@@ -78,8 +79,8 @@ module SayTests =
               <| fun _ ->
                   let (Result: uint16) =
                       FirstHomework.MinMaxFromArray [| 371us
-                                              ;1231us
-                                             ;1001us |]
+                                                       1231us
+                                                       1001us |]
 
                   Expect.equal Result 860us "For array [|371us;1231us;1001us|] answer is 861us"
               //decimal
@@ -87,9 +88,9 @@ module SayTests =
               <| fun _ ->
                   let (Result: decimal) =
                       FirstHomework.MinMaxFromArray [| 13.6m
-                                              ;121m
-                                              ;19.653m
-                                              ;152.125m |]
+                                                       121m
+                                                       19.653m
+                                                       152.125m |]
 
                   Expect.equal Result 138.525m "For array [|13.6m;121m;19.653m;152.125m|] answer is 861us"
               testCase "Odds between 0 and 1"
