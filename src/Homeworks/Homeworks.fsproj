@@ -18,6 +18,7 @@
         <None Include="App.config" />
         <Compile Include="Mylist.fs" />
         <Compile Include="IList.fs" />
+        <Compile Include="FirstHomework.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
