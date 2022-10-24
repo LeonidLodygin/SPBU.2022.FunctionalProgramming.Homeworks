@@ -8,7 +8,7 @@ type ArbitraryTree<'value> =
     | Node of value: 'value * nodes: array<ArbitraryTree<'value>>
     | Leaf of value: 'value
 
-/// Function receives a tree of type ArbitraryTree and returns list of type MyList of values from nodes and leaves
+/// The function iterates through the tree and returns a tuple consisting of a list of type MyList and the number of different elements in the tree
 let rec TreeWalker (tree: ArbitraryTree<'value>) (hashSet: HashSet<'value>) =
     match tree with
     | Leaf value ->
