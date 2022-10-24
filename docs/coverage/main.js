@@ -224,11 +224,11 @@ var assemblies = [
   {
     "name": "Homeworks",
     "classes": [
-      { "name": "FirstHomework", "rp": "Homeworks_FirstHomework.html", "cl": 25, "ucl": 10, "cal": 35, "tl": 69, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
+      { "name": "FirstHomework", "rp": "Homeworks_FirstHomework.html", "cl": 25, "ucl": 10, "cal": 35, "tl": 68, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
       { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
       { "name": "IListHomework", "rp": "Homeworks_IListHomework.html", "cl": 45, "ucl": 7, "cal": 52, "tl": 107, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 42, "lch": [], "bch": [], "hc": [] },
       { "name": "MyListHomework", "rp": "Homeworks_MyListHomework.html", "cl": 32, "ucl": 0, "cal": 32, "tl": 69, "ct": "LineCoverage", "mc": "-", "cb": 24, "tb": 24, "lch": [], "bch": [], "hc": [] },
-      { "name": "TreeHomework", "rp": "Homeworks_TreeHomework.html", "cl": 14, "ucl": 0, "cal": 14, "tl": 37, "ct": "LineCoverage", "mc": "-", "cb": 8, "tb": 8, "lch": [], "bch": [], "hc": [] },
+      { "name": "TreeHomework", "rp": "Homeworks_TreeHomework.html", "cl": 14, "ucl": 0, "cal": 14, "tl": 36, "ct": "LineCoverage", "mc": "-", "cb": 4, "tb": 4, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
 

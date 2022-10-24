@@ -9,17 +9,21 @@ type ArbitraryTree<'value> =
     | Leaf of value: 'value
 
 /// Function receives a tree of type ArbitraryTree and returns list of type MyList of values from nodes and leaves
-let rec TreeWalker (tree: ArbitraryTree<'value>) (hashSet:HashSet<'value>) =
+let rec TreeWalker (tree: ArbitraryTree<'value>) (hashSet: HashSet<'value>) =
     match tree with
     | Leaf value ->
         hashSet.Add(value) |> ignore
         Cons(value, Empty), hashSet
     | Node (value, array) ->
         hashSet.Add(value) |> ignore
-        let rec ArrayOfTreesToMyList (array: array<ArbitraryTree<'value>>) (hashSet:HashSet<'value>) =
+
+        let rec ArrayOfTreesToMyList (array: array<ArbitraryTree<'value>>) (hashSet: HashSet<'value>) =
             match array with
             | [||] -> Empty
-            | array -> Concatenation(fst (TreeWalker array[0] hashSet)) (ArrayOfTreesToMyList array[1 .. array.Length - 1] hashSet)
+            | array ->
+                Concatenation
+                    (fst (TreeWalker array[0] hashSet))
+                    (ArrayOfTreesToMyList array[1 .. array.Length - 1] hashSet)
 
         Cons(value, ArrayOfTreesToMyList array hashSet), hashSet
 
