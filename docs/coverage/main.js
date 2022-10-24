@@ -224,7 +224,8 @@ var assemblies = [
   {
     "name": "Homeworks",
     "classes": [
-      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 25, "ucl": 11, "cal": 36, "tl": 85, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
+      { "name": "FirstHomework", "rp": "Homeworks_FirstHomework.html", "cl": 25, "ucl": 10, "cal": 35, "tl": 69, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
+      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
       { "name": "IListHomework", "rp": "Homeworks_IListHomework.html", "cl": 45, "ucl": 7, "cal": 52, "tl": 107, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 42, "lch": [], "bch": [], "hc": [] },
       { "name": "MyListHomework", "rp": "Homeworks_MyListHomework.html", "cl": 32, "ucl": 0, "cal": 32, "tl": 69, "ct": "LineCoverage", "mc": "-", "cb": 24, "tb": 24, "lch": [], "bch": [], "hc": [] },
       { "name": "TreeHomework", "rp": "Homeworks_TreeHomework.html", "cl": 14, "ucl": 0, "cal": 14, "tl": 37, "ct": "LineCoverage", "mc": "-", "cb": 8, "tb": 8, "lch": [], "bch": [], "hc": [] },
@@ -241,14 +242,14 @@ var riskHotspotMetrics = [
 
 var riskHotspots = [
   {
-    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray(value[])", "methodShortName": "MinMaxFromArray(...)", "fileIndex": 0, "line": 46,
+    "assembly": "Homeworks", "class": "FirstHomework", "reportPath": "Homeworks_FirstHomework.html", "methodName": "a FirstHomework::MinMaxFromArray(value[])", "methodShortName": "MinMaxFromArray(...)", "fileIndex": 0, "line": 44,
     "metrics": [
       { "value": 5, "exceeded": false },
       { "value": 16, "exceeded": false },
       { "value": 30, "exceeded": true },
     ]},
   {
-    "assembly": "Homeworks", "class": "Homeworks.Main", "reportPath": "Homeworks_Main.html", "methodName": "a Homeworks.Main::MinMaxFromArray$W(Microsoft.FSharp.Core.FSharpFunc`2<value,Microsoft.FSharp.Core.FSharpFunc`2<value,a>>,value[])", "methodShortName": "MinMaxFromArray$W(...)", "fileIndex": 0, "line": 46,
+    "assembly": "Homeworks", "class": "FirstHomework", "reportPath": "Homeworks_FirstHomework.html", "methodName": "a FirstHomework::MinMaxFromArray$W(Microsoft.FSharp.Core.FSharpFunc`2<value,Microsoft.FSharp.Core.FSharpFunc`2<value,a>>,value[])", "methodShortName": "MinMaxFromArray$W(...)", "fileIndex": 0, "line": 44,
     "metrics": [
       { "value": 5, "exceeded": false },
       { "value": 16, "exceeded": false },
