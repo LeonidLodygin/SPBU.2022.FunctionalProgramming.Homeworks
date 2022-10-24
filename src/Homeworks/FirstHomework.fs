@@ -66,4 +66,3 @@ let OddNumbersArray (a: int) (b: int) =
                if i % 2 <> 0 then i |]
 
     oddsArray
-
