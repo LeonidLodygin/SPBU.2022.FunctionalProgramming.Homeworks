@@ -19,7 +19,6 @@
         <Compile Include="Mylist.fs" />
         <Compile Include="IList.fs" />
         <Compile Include="FirstHomework.fs" />
-        <Compile Include="Tree.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
