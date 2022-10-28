@@ -84,12 +84,12 @@ module TreeTests =
                   Expect.equal
                       Result
                       (Cons(
-                          12,
+                          1,
                           Cons(
-                              1,
+                              12,
                               Cons(
-                                  12,
-                                  Cons(3, Cons(12, Cons(10, Cons(4, Cons(12, Cons(15, Cons(12, Cons(1, Empty))))))))
+                                  15,
+                                  Cons(12, Cons(4, Cons(10, Cons(12, Cons(3, Cons(12, Cons(1, Cons(12, Empty))))))))
                               )
                           )
                       ))
