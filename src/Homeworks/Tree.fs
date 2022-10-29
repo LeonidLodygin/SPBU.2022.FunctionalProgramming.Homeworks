@@ -8,19 +8,10 @@ type ArbitraryTree<'value> =
     | Leaf of value: 'value
     | Node of value: 'value * nodes: array<ArbitraryTree<'value>>
 
-let rec ArrayWalker func param arr =
-    let recur = ArrayWalker func
-
-    match arr with
-    | [||] -> param
-    | arr -> recur (func param arr[0]) arr[1 .. arr.Length - 1]
-
-let rec TreeWalker hell answer tree =
+let rec TreeWalker helper storage tree =
     match tree with
-    | Leaf value -> hell answer value
-    | Node (value, arr) ->
-        let param = hell answer value
-        ArrayWalker(TreeWalker hell) param arr
+    | Leaf value -> helper storage value
+    | Node (value, arr) -> Array.fold (TreeWalker helper) (helper storage value) arr
 
 let MyListOfTree (tree: ArbitraryTree<'value>) =
     let ListFromTree (list: MyList<'value>) value = Cons(value, list)
