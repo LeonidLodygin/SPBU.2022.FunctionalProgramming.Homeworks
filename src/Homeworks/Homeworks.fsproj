@@ -20,6 +20,9 @@
         <Compile Include="IList.fs" />
         <Compile Include="FirstHomework.fs" />
         <Compile Include="Tree.fs" />
+        <Compile Include="SparseVector.fs" />
+        <Compile Include="SparseMatrix.fs" />
+        <Compile Include="MultiMatrix.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>

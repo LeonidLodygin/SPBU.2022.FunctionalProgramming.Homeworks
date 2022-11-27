@@ -227,7 +227,10 @@ var assemblies = [
       { "name": "FirstHomework", "rp": "Homeworks_FirstHomework.html", "cl": 25, "ucl": 10, "cal": 35, "tl": 68, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
       { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
       { "name": "IListHomework", "rp": "Homeworks_IListHomework.html", "cl": 45, "ucl": 7, "cal": 52, "tl": 107, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 42, "lch": [], "bch": [], "hc": [] },
+      { "name": "MultiMatrix", "rp": "Homeworks_MultiMatrix.html", "cl": 41, "ucl": 5, "cal": 46, "tl": 86, "ct": "LineCoverage", "mc": "-", "cb": 36, "tb": 42, "lch": [], "bch": [], "hc": [] },
       { "name": "MyListHomework", "rp": "Homeworks_MyListHomework.html", "cl": 32, "ucl": 0, "cal": 32, "tl": 69, "ct": "LineCoverage", "mc": "-", "cb": 24, "tb": 24, "lch": [], "bch": [], "hc": [] },
+      { "name": "SparseMatrix", "rp": "Homeworks_SparseMatrix.html", "cl": 55, "ucl": 2, "cal": 57, "tl": 101, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 38, "lch": [], "bch": [], "hc": [] },
+      { "name": "SparseVector", "rp": "Homeworks_SparseVector.html", "cl": 34, "ucl": 2, "cal": 36, "tl": 83, "ct": "LineCoverage", "mc": "-", "cb": 20, "tb": 22, "lch": [], "bch": [], "hc": [] },
       { "name": "TreeHomework", "rp": "Homeworks_TreeHomework.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 27, "ct": "LineCoverage", "mc": "-", "cb": 2, "tb": 2, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
