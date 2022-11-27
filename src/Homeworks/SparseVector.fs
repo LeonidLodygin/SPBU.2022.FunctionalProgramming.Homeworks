@@ -52,7 +52,7 @@ let Transformer (arr: array<'value option>) =
     if arr.Length = 0 then
         None
     else
-        helper (virtualVec)
+        helper virtualVec
 
 type SparseVector<'value when 'value: equality> =
     val Memory: BinaryTree<'value>

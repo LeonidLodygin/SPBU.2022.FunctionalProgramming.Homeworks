@@ -18,10 +18,10 @@ let rec CutSomeTree tree diff =
 
 let GetValue x =
     match x with
-    | Some (value) -> value
+    | Some value -> value
     | _ -> failwith $"No value"
 
-let FAddTree
+let FAddVector
     (func: 'a option -> 'b option -> 'c option)
     (vec1: SparseVector<'a>)
     (vec2: SparseVector<'b>)
@@ -61,7 +61,7 @@ let MultiplyVecMat
             let vec3 = SparseVector(Helper left second, matrix.Columns)
             let vec4 = SparseVector(Helper right fourth, matrix.Columns)
 
-            Node((FAddTree fAdd vec1 vec2).Memory, (FAddTree fAdd vec3 vec4).Memory)
+            Node((FAddVector fAdd vec1 vec2).Memory, (FAddVector fAdd vec3 vec4).Memory)
             |> NoneDestroyer
         | _, _ -> failwith $"Something going wrong"
 

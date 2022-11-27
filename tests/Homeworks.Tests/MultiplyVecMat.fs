@@ -178,14 +178,14 @@ module SimpleTests =
 module MultiplyTests =
     let fAdd a b =
         match a, b with
-        | Some (x), Some (y) -> Some(x + y)
-        | Option.None, Some (x) -> Some(x)
-        | Some (x), Option.None -> Some(x)
+        | Some x, Some y -> Some(x + y)
+        | Option.None, Some x -> Some x
+        | Some x, Option.None -> Some x
         | Option.None, Option.None -> Option.None
 
     let fMult a b =
         match a, b with
-        | Some (x), Some (y) -> Some(x * y)
+        | Some x, Some y -> Some(x * y)
         | Option.None, _
         | _, Option.None -> Option.None
 
@@ -327,7 +327,7 @@ module SpecialPropertyTests =
 
                   let vec1 = SparseVector arrOfSome1
                   let vec2 = SparseVector arrOfSome2
-                  let Result = FAddTree MultiplyTests.fAdd vec1 vec2
+                  let Result = FAddVector MultiplyTests.fAdd vec1 vec2
 
                   let NaiveSum (arr1: array<int option>) (arr2: array<int option>) =
                       let arrOfSum = Array.zeroCreate arr1.Length
@@ -338,7 +338,9 @@ module SpecialPropertyTests =
                       arrOfSum
 
                   Expect.equal Result.Memory
-                  <| (SparseVector(NaiveSum arrOfSome1 arrOfSome2))
+                  <| SparseVector(
+                      NaiveSum arrOfSome1 arrOfSome2
+                  )
                       .Memory
                   <| "Results of FAddTree with two vectors should be the same with naive sum"
               testProperty "Multiply vec on matrix"
@@ -368,6 +370,8 @@ module SpecialPropertyTests =
                       arrOfMult
 
                   Expect.equal Result.Memory
-                  <| (SparseVector(NaiveMultiply arrOfSome arrOfSome2D))
+                  <| SparseVector(
+                      NaiveMultiply arrOfSome arrOfSome2D
+                  )
                       .Memory
                   <| "Results of MultiplyVecMat with vector and matrix should be the same with naive multiply" ]
