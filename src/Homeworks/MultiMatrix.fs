@@ -16,34 +16,6 @@ let rec CutSomeTree tree diff =
     | Node (first, _) when diff > 0 -> CutSomeTree first (diff - 1)
     | _ -> tree
 
-let GetValue x =
-    match x with
-    | Some value -> value
-    | _ -> failwith $"No value"
-
-let FAddVector
-    (func: 'a option -> 'b option -> 'c option)
-    (vec1: SparseVector<'a>)
-    (vec2: SparseVector<'b>)
-    : SparseVector<'c> =
-    let rec Helper (tree1: BinaryTree<'a>) (tree2: BinaryTree<'b>) : BinaryTree<'c> =
-        match tree1, tree2 with
-        | None, None -> BinaryTree.None
-        | Leaf value1, Leaf value2 -> Leaf(func (Some value1) (Some value2) |> GetValue)
-        | None, Leaf value -> Leaf(func Option.None (Some value) |> GetValue)
-        | Leaf value, None -> Leaf(func (Some value) Option.None |> GetValue)
-        | None, Node (left, right) -> Node(Helper None left, Helper None right)
-        | Node (left, right), None -> Node(Helper left None, Helper right None)
-        | Node (Leaf left, Leaf right), Node (Leaf left2, Leaf right2) ->
-            Node(Leaf(func (Some left) (Some left2) |> GetValue), Leaf(func (Some right) (Some right2) |> GetValue))
-        | Node (left, right), Node (left2, right2) -> Node(Helper left left2, Helper right right2)
-        | _, _ -> failwith $"Something going wrong"
-
-    if vec1.Length <> vec2.Length then
-        failwith $"Different values of first vector length and second vector length"
-    else
-        SparseVector(Helper vec1.Memory vec2.Memory, vec1.Length)
-
 let MultiplyVecMat
     (vector: SparseVector<'a>)
     (matrix: SparseMatrix<'b>)
@@ -54,7 +26,7 @@ let MultiplyVecMat
         match vectorTree, matrixTree with
         | BinaryTree.None, _ -> BinaryTree.None
         | _, QuadTree.None -> BinaryTree.None
-        | BinaryTree.Leaf value, QuadTree.Leaf value1 -> BinaryTree.Leaf(fMult (Some value) (Some value1) |> GetValue)
+        | BinaryTree.Leaf value, QuadTree.Leaf value1 -> fMult (Some value) (Some value1) |> NoneOrValue
         | Node (left, right), QuadTree.Node (first, second, third, fourth) ->
             let vec1 = SparseVector(Helper left first, matrix.Columns)
             let vec2 = SparseVector(Helper right third, matrix.Columns)

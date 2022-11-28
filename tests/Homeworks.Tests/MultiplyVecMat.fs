@@ -15,7 +15,7 @@ module SimpleTests =
             "Some simple tests"
             [ testCase "Degree of 2 from 5"
               <| fun _ ->
-                  let Result = ClosestDegreeOf2 5
+                  let Result = ClosestDegreeOf2 5 0
 
                   Expect.equal
                   <| Result
@@ -23,7 +23,7 @@ module SimpleTests =
                   <| "Closest degree of 2 from 5 is 2^3 = 8"
               testCase "Degree of 2 from zero"
               <| fun _ ->
-                  let Result = ClosestDegreeOf2 0
+                  let Result = ClosestDegreeOf2 0 0
 
                   Expect.equal
                   <| Result
@@ -31,7 +31,7 @@ module SimpleTests =
                   <| "Closest degree of 2 from 0 is 0"
               testCase "Degree of 2 from 5 or 9"
               <| fun _ ->
-                  let Result = SparseMatrix.ClosestDegreeOf2 5 9
+                  let Result = ClosestDegreeOf2 5 9
 
                   Expect.equal
                   <| Result
@@ -178,14 +178,22 @@ module SimpleTests =
 module MultiplyTests =
     let fAdd a b =
         match a, b with
-        | Some x, Some y -> Some(x + y)
+        | Some x, Some y ->
+            if x + y <> 0 then
+                Some(x + y)
+            else
+                Option.None
         | Option.None, Some x -> Some x
         | Some x, Option.None -> Some x
         | Option.None, Option.None -> Option.None
 
     let fMult a b =
         match a, b with
-        | Some x, Some y -> Some(x * y)
+        | Some x, Some y ->
+            if x * y <> 0 then
+                Some(x * y)
+            else
+                Option.None
         | Option.None, _
         | _, Option.None -> Option.None
 
@@ -240,7 +248,7 @@ module SomePropertyTests =
                       if arr.Length = 1 then
                           2
                       else
-                          ClosestDegreeOf2(arr.Length)
+                          ClosestDegreeOf2 arr.Length 0
 
                   let vec = Vector(arr, 0, length)
                   let Result = Separator vec
@@ -259,7 +267,7 @@ module SomePropertyTests =
                   else
                       Expect.equal
                       <| arr[r]
-                      <| Result.getItem r
+                      <| Result[r]
                       <| "Item from the cell of array should be equal to item from the cell of SparseVector"
               testProperty "Columns and lines of separated matrix"
               <| fun (arr: int option [,]) ->
@@ -267,11 +275,11 @@ module SomePropertyTests =
                       if Array2D.length2 arr = 1 || Array2D.length1 arr = 1 then
                           max
                           <| 2
-                          <| (SparseMatrix.ClosestDegreeOf2
+                          <| (ClosestDegreeOf2
                               <| Array2D.length2 arr
                               <| Array2D.length1 arr)
                       else
-                          SparseMatrix.ClosestDegreeOf2
+                          ClosestDegreeOf2
                           <| Array2D.length2 arr
                           <| Array2D.length1 arr
 
@@ -293,7 +301,7 @@ module SomePropertyTests =
                   else
                       Expect.equal
                       <| arr[y, x]
-                      <| Result.getItem x y
+                      <| Result[x, y]
                       <| "Item from the cell of array2D should be equal to item from the cell of SparseMatrix"
               testProperty "Value from option"
               <| fun (x: int option) ->
@@ -308,25 +316,32 @@ module SomePropertyTests =
                       <| "Function GetValue should be equal with system method .Value" ]
 
 module SpecialPropertyTests =
+    let GeneratorOfVectors (length: int) =
+        let arr = Array.init (abs length) (fun _ -> Random().Next(1, 10))
+
+        let arrOfSome =
+            arr
+            |> Array.map (fun x -> if x > 2 then Option.None else Some(x))
+
+        SparseVector arrOfSome, arrOfSome
+
+    let GeneratorOfMatrix (length: int) =
+        let arr2D = Array2D.init (abs length) (abs length) (fun _ _ -> Random().Next(1, 10))
+
+        let arrOfSome2D =
+            arr2D
+            |> Array2D.map (fun x -> if x > 2 then Option.None else Some(x))
+
+        SparseMatrix arrOfSome2D, arrOfSome2D
+
     [<Tests>]
     let tests =
         testList
             "Some multiply property tests"
             [ testProperty "Sum of two vectors"
               <| fun (length: int) ->
-                  let arr1 = Array.init (abs length) (fun _ -> Random().Next(1, 10))
-                  let arr2 = Array.init (abs length) (fun _ -> Random().Next(1, 10))
-
-                  let arrOfSome1 =
-                      arr1
-                      |> Array.map (fun x -> if x > 2 then Option.None else Some(x))
-
-                  let arrOfSome2 =
-                      arr2
-                      |> Array.map (fun x -> if x > 2 then Option.None else Some(x))
-
-                  let vec1 = SparseVector arrOfSome1
-                  let vec2 = SparseVector arrOfSome2
+                  let vec1, arrOfSome1 = GeneratorOfVectors(abs length)
+                  let vec2, arrOfSome2 = GeneratorOfVectors(abs length)
                   let Result = FAddVector MultiplyTests.fAdd vec1 vec2
 
                   let NaiveSum (arr1: array<int option>) (arr2: array<int option>) =
@@ -345,19 +360,9 @@ module SpecialPropertyTests =
                   <| "Results of FAddTree with two vectors should be the same with naive sum"
               testProperty "Multiply vec on matrix"
               <| fun (length: int) ->
-                  let arr = Array.init (abs length) (fun _ -> Random().Next(1, 10))
-                  let arr2D = Array2D.init (abs length) (abs length) (fun _ _ -> Random().Next(1, 10))
 
-                  let arrOfSome =
-                      arr
-                      |> Array.map (fun x -> if x > 2 then Option.None else Some(x))
-
-                  let arrOfSome2D =
-                      arr2D
-                      |> Array2D.map (fun x -> if x > 2 then Option.None else Some(x))
-
-                  let vec = SparseVector arrOfSome
-                  let matrix = SparseMatrix arrOfSome2D
+                  let vec, arrOfSome = GeneratorOfVectors(abs length)
+                  let matrix, arrOfSome2D = GeneratorOfMatrix(abs length)
                   let Result = MultiplyVecMat vec matrix MultiplyTests.fAdd MultiplyTests.fMult
 
                   let NaiveMultiply (arr: array<int option>) (arr2D: int option [,]) =
