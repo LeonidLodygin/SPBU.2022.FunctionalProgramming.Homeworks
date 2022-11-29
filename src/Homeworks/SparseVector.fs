@@ -86,15 +86,10 @@ type SparseVector<'value when 'value: equality> =
 
                 GetElementByIndex this.Memory virtualLength i
 
-let GetValue x =
-    match x with
-    | Some value -> value
-    | _ -> failwith $"No value"
-
 let NoneOrValue x =
     match x with
     | Option.None -> None
-    | _ -> Leaf(x |> GetValue)
+    | Some value -> Leaf value
 
 let FAddVector
     (func: 'a option -> 'b option -> 'c option)

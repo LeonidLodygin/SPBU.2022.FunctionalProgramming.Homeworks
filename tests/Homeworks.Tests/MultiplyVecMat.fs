@@ -165,15 +165,7 @@ module SimpleTests =
                   Expect.equal
                   <| Result
                   <| Node(Node(Leaf 1, None), None)
-                  <| "GrowSomeTree of Node(Leaf 1, None) with difference 1 should be Node(Node(Leaf 1, None), None)"
-              testCase "Trying to get value from option"
-              <| fun _ ->
-                  let Result = GetValue(Some 5)
-
-                  Expect.equal
-                  <| Result
-                  <| 5
-                  <| "Value of Some(5) should be 5" ]
+                  <| "GrowSomeTree of Node(Leaf 1, None) with difference 1 should be Node(Node(Leaf 1, None), None)" ]
 
 module MultiplyTests =
     let fAdd a b =
@@ -302,18 +294,7 @@ module SomePropertyTests =
                       Expect.equal
                       <| arr[y, x]
                       <| Result[x, y]
-                      <| "Item from the cell of array2D should be equal to item from the cell of SparseMatrix"
-              testProperty "Value from option"
-              <| fun (x: int option) ->
-                  if x = Option.None then
-                      skiptest |> ignore
-                  else
-                      let Result = GetValue x
-
-                      Expect.equal
-                      <| Result
-                      <| x.Value
-                      <| "Function GetValue should be equal with system method .Value" ]
+                      <| "Item from the cell of array2D should be equal to item from the cell of SparseMatrix" ]
 
 module SpecialPropertyTests =
     let GeneratorOfVectors (length: int) =
@@ -333,6 +314,14 @@ module SpecialPropertyTests =
             |> Array2D.map (fun x -> if x > 2 then Option.None else Some(x))
 
         SparseMatrix arrOfSome2D, arrOfSome2D
+
+    let rec BinaryTreeInspector tree =
+        match tree with
+        | Node (None, None) -> false
+        | Node (left, right) ->
+            BinaryTreeInspector left
+            && BinaryTreeInspector right
+        | _ -> true
 
     [<Tests>]
     let tests =
@@ -358,6 +347,11 @@ module SpecialPropertyTests =
                   )
                       .Memory
                   <| "Results of FAddTree with two vectors should be the same with naive sum"
+
+                  Expect.equal
+                  <| BinaryTreeInspector Result.Memory
+                  <| true
+                  <| "Tree is unreduced"
               testProperty "Multiply vec on matrix"
               <| fun (length: int) ->
 
@@ -379,4 +373,9 @@ module SpecialPropertyTests =
                       NaiveMultiply arrOfSome arrOfSome2D
                   )
                       .Memory
-                  <| "Results of MultiplyVecMat with vector and matrix should be the same with naive multiply" ]
+                  <| "Results of MultiplyVecMat with vector and matrix should be the same with naive multiply"
+
+                  Expect.equal
+                  <| BinaryTreeInspector Result.Memory
+                  <| true
+                  <| "Tree is unreduced" ]

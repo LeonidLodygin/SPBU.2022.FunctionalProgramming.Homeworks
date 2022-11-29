@@ -5,13 +5,13 @@ open SparseVector
 type Matrix<'value> =
     struct
         val Memory: 'value option [,]
-        val Coordinates: int * int
+        val CoordinatesOfHead: int * int
         val Columns: int
         val Lines: int
 
         new(memory, head, columns, lines) =
             { Memory = memory
-              Coordinates = head
+              CoordinatesOfHead = head
               Columns = columns
               Lines = lines }
     end
@@ -23,22 +23,22 @@ type QuadTree<'value> =
     | None
 
 let Separator (matrix: Matrix<'value>) =
-    Matrix(matrix.Memory, matrix.Coordinates, matrix.Columns / 2, matrix.Lines / 2),
+    Matrix(matrix.Memory, matrix.CoordinatesOfHead, matrix.Columns / 2, matrix.Lines / 2),
     Matrix(
         matrix.Memory,
-        (fst matrix.Coordinates + matrix.Columns / 2, snd matrix.Coordinates),
+        (fst matrix.CoordinatesOfHead + matrix.Columns / 2, snd matrix.CoordinatesOfHead),
         matrix.Columns / 2,
         matrix.Lines / 2
     ),
     Matrix(
         matrix.Memory,
-        (fst matrix.Coordinates, snd matrix.Coordinates + matrix.Lines / 2),
+        (fst matrix.CoordinatesOfHead, snd matrix.CoordinatesOfHead + matrix.Lines / 2),
         matrix.Columns / 2,
         matrix.Lines / 2
     ),
     Matrix(
         matrix.Memory,
-        (fst matrix.Coordinates + matrix.Columns / 2, snd matrix.Coordinates + matrix.Lines / 2),
+        (fst matrix.CoordinatesOfHead + matrix.Columns / 2, snd matrix.CoordinatesOfHead + matrix.Lines / 2),
         matrix.Columns / 2,
         matrix.Lines / 2
     )
@@ -54,18 +54,18 @@ let Transformer (arr: 'value option [,]) =
     let virtualMatrix = Matrix(arr, (0, 0), virtualLength, virtualLength)
 
     let rec helper (virtualMatrix: Matrix<'value>) =
-        if fst virtualMatrix.Coordinates
+        if fst virtualMatrix.CoordinatesOfHead
            >= Array2D.length2 arr
-           || snd virtualMatrix.Coordinates
+           || snd virtualMatrix.CoordinatesOfHead
               >= Array2D.length1 arr then
             None
         elif virtualMatrix.Columns = 1
              && virtualMatrix.Lines = 1 then
-            if virtualMatrix.Memory[snd virtualMatrix.Coordinates, fst virtualMatrix.Coordinates] = Option.None then
+            if virtualMatrix.Memory[snd virtualMatrix.CoordinatesOfHead, fst virtualMatrix.CoordinatesOfHead] = Option.None then
                 None
             else
                 Leaf
-                    virtualMatrix.Memory[snd virtualMatrix.Coordinates, fst virtualMatrix.Coordinates]
+                    virtualMatrix.Memory[snd virtualMatrix.CoordinatesOfHead, fst virtualMatrix.CoordinatesOfHead]
                         .Value
         else
             let fst, snd, thd, fth = Separator virtualMatrix
