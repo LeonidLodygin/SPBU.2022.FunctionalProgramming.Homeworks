@@ -10,6 +10,7 @@
         <Compile Include="ListTests.fs" />
         <Compile Include="TreeTests.fs" />
         <Compile Include="Tests.fs" />
+        <Compile Include="MultiplyVecMat.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
