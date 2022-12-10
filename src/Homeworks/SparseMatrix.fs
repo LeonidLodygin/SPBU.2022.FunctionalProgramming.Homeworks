@@ -78,18 +78,27 @@ let Transformer (arr: 'value option [,]) =
     else
         helper virtualMatrix
 
-type SparseMatrix<'value when 'value: equality>(arr: 'value option [,]) =
-    let memory = Transformer arr
-    member this.Memory = memory
-    member this.Lines = Array2D.length1 arr
-    member this.Columns = Array2D.length2 arr
+type SparseMatrix<'value when 'value: equality> =
+    val Memory: QuadTree<'value>
+    val Lines: int
+    val Columns: int
+    new(arr) =
+        { Memory = Transformer arr
+          Lines = Array2D.length1 arr
+          Columns = Array2D.length2 arr }
+    new(tree, lines, columns) =
+        {
+            Memory = tree
+            Lines = lines
+            Columns = columns
+        }
 
     member this.Item
         with get (x, y) =
             if x >= this.Columns || y >= this.Lines then
                 failwith $"Coordinates %A{x},{y} is out of range."
             else
-                let virtualLength = ClosestDegreeOf2(Array2D.length1 arr) (Array2D.length2 arr)
+                let virtualLength = ClosestDegreeOf2 this.Lines this.Columns
 
                 let rec GetElementByIndex tree columns lines x y =
                     match tree with
