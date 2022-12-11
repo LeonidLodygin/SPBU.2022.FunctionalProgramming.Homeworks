@@ -4,74 +4,83 @@ open SparseVector
 open SparseMatrix
 open FSharp.Collections
 
-let third(_,_,x) = x
-let rec ListSeparatorForMatrix (list:List<int*int*'a>) size : List<int*int*'a>*List<int*int*'a>*List<int*int*'a>*List<int*int*'a>=
-    match list with
-    | [] -> ([],[],[],[])
-    | (f, s, t)::tl ->
-        let fst, snd, thd, fth = ListSeparatorForMatrix tl size
-        if f < size / 2 then
-            if s < size/2 then
-                ((f, s, t)::fst, snd, thd, fth)
-            else
-                (fst, (f - size/2, s, t)::snd, thd, fth)
-        else
-            if s < size/2 then
-                (fst, snd, (f, s, t)::thd, fth)
-            else
-                (fst, snd, thd, (f - size/2, s - size/2, t)::fth)
+let first (x, _, _) = x
+let second (_, x, _) = x
+let third (_, _, x) = x
 
-let MatrixFromList (list:List<int*int*'a>) size =
-    let virtualLength = ClosestDegreeOf2 size 0
-    let rec helper list size =
+let ListVecSeparator (list: List<int>) size =
+    let rec helper list leftList rightList =
         match list with
-        | [] -> QuadTree.None
-        | [hd] -> QuadTree.Leaf (third hd)
-        | _ ->
-            let fst, snd, thd, fth = ListSeparatorForMatrix list size
-            let nw = helper fst (size/2)
-            let ne = helper snd (size/2)
-            let sw = helper thd (size/2)
-            let se = helper fth (size/2)
-            QuadTree.Node(nw, ne, sw, se)
-    SparseMatrix(helper list virtualLength, size, size)
-
-
-let rec ListSeparatorForVector (list:List<int>) size : List<int>*List<int> =
-    match list with
-    | [] -> ([],[])
-    | hd::tl ->
-        let left, right = ListSeparatorForVector tl size
-        if hd < size / 2 then
-            (hd::left, right)
-        else
-            (left, (hd-size/2)::right)
-
-let VectorFromList (list:List<int>) size =
-    let virtualLength = ClosestDegreeOf2 size 0
-    let rec helper list size =
-        match list with
-        | [] -> BinaryTree.None
-        | [hd] ->
-            if hd > size then
-                BinaryTree.None
-            elif size = 1 then
-                BinaryTree.Leaf true
-            elif hd < size/2 then
-                BinaryTree.Node(helper [hd] (size/2), BinaryTree.None)
+        | [] -> leftList, rightList
+        | hd :: tl ->
+            if hd < size / 2 then
+                helper tl (hd :: leftList) rightList
             else
-                BinaryTree.Node(BinaryTree.None, helper [hd-size/2] (size/2))
-        | _ ->
-            let divide = ListSeparatorForVector list size
-            let left = helper (fst divide) (size/2)
-            let right = helper (snd divide) (size/2)
-            BinaryTree.Node(left, right)
+                helper tl leftList ((hd - size / 2) :: rightList)
+
+    helper list [] []
+
+let ListMatrixSeparator (list: List<int * int * 'a option>) size =
+    let rec helper list NW NE SW SE =
+        match list with
+        | [] -> NW, NE, SW, SE
+        | (x, y, value) :: tl ->
+            if x < size / 2 then
+                if y < size / 2 then
+                    helper tl ((x, y, value) :: NW) NE SW SE
+                else
+                    helper tl NW ((x, y - size / 2, value) :: NE) SW SE
+            else if y < size / 2 then
+                helper tl NW NE ((x - size / 2, y, value) :: SW) SE
+            else
+                helper tl NW NE SW ((x - size / 2, y - size / 2, value) :: SE)
+
+    helper list [] [] [] []
+
+let VecFromList (list: List<int>) size =
+    let virtualLength = ClosestDegreeOf2 size 0
+
+    let rec helper list virtualLength =
+        if virtualLength = 0 then
+            BinaryTree.None
+        elif virtualLength = 1
+             && not (List.isEmpty list)
+             && (list.Head < size) then
+            BinaryTree.Leaf(true)
+        elif virtualLength = 1
+             && ((List.isEmpty list) || (list.Head >= size)) then
+            BinaryTree.None
+        else
+            let lists = ListVecSeparator list virtualLength
+
+            BinaryTree.Node(helper (fst lists) (virtualLength / 2), helper (snd lists) (virtualLength / 2))
+            |> SparseVector.NoneDestroyer
+
     SparseVector(helper list virtualLength, size)
 
-let vector = VectorFromList [1; 2; 3; 5] 6
+let MatrixFromList (list: List<int * int * 'a option>) size =
+    let virtualLength = ClosestDegreeOf2 size 0
 
+    let rec helper list length =
+        if length = 0 then
+            QuadTree.None
+        elif length = 1
+             && not (List.isEmpty list)
+             && (first list.Head < size && second list.Head < size) then
+            QuadTree.Leaf(third list.Head)
+        elif length = 1
+             && ((List.isEmpty list)
+                 || (first list.Head > size || second list.Head > size)) then
+            QuadTree.None
+        else
+            let NW, NE, SW, SE = ListMatrixSeparator list length
 
+            QuadTree.Node(
+                helper NW (length / 2),
+                helper NE (length / 2),
+                helper SW (length / 2),
+                helper SE (length / 2)
+            )
+            |> NoneDestroyer
 
-
-//let Bfs graph points : SparseVector<int option> =
-
+    SparseMatrix(helper list virtualLength, size, size)

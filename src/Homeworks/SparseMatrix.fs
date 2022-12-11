@@ -82,16 +82,16 @@ type SparseMatrix<'value when 'value: equality> =
     val Memory: QuadTree<'value>
     val Lines: int
     val Columns: int
+
     new(arr) =
         { Memory = Transformer arr
           Lines = Array2D.length1 arr
           Columns = Array2D.length2 arr }
+
     new(tree, lines, columns) =
-        {
-            Memory = tree
-            Lines = lines
-            Columns = columns
-        }
+        { Memory = tree
+          Lines = lines
+          Columns = columns }
 
     member this.Item
         with get (x, y) =
