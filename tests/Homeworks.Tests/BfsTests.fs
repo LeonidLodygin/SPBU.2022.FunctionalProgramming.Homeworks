@@ -191,4 +191,4 @@ module PropertyTests =
                       Expect.equal
                       <| Result1.Memory
                       <| Result2.Memory
-                      <| "Error" ]
+                      <| "Something wrong with bfs" ]
