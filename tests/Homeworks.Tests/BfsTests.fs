@@ -1,6 +1,6 @@
 ﻿module Homeworks.BfsTests
 
-
+open System
 open Expecto
 open Microsoft.FSharp.Core
 open SparseMatrix
@@ -14,7 +14,7 @@ module SimpleTests =
             "Some simple tests"
             [ testCase "Front from list with 1 apex"
               <| fun _ ->
-                  let Result = VecFromList [ 0 ] 1
+                  let Result = VecFromList [ 0, true ] 1
 
                   Expect.equal
                   <| Result.Memory
@@ -30,7 +30,7 @@ module SimpleTests =
                   <| "VecFromList should return \"BinaryTree.None\" from empty list"
               testCase "Front from non empty list"
               <| fun _ ->
-                  let Result = VecFromList [ 1; 4; 5 ] 6
+                  let Result = VecFromList [ 1, true; 4, true; 5, true ] 6
 
                   Expect.equal
                   <| Result.Memory
@@ -71,12 +71,12 @@ module SimpleTests =
                             (1, 0, Some 4)
                             (1, 3, Some 9)
                             (3, 1, Some 9) ]
-                          [ 0 ]
+                          [ 0, true ]
                           4
 
                   Expect.equal Result.Memory
                   <| Node(Node(Leaf 0, Leaf 1), Node(None, Leaf 2))
-                  <| "Bfs should return \"Node(Node(Leaf 0, Leaf 1), Node(Leaf 2, None))\" from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0]" ]
+                  <| "Bfs should return \"Node(Node(Leaf 0, Leaf 1), Node(None, Leaf 2))\" from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0]" ]
 
 module PropertyTests =
     [<Tests>]
@@ -88,18 +88,107 @@ module PropertyTests =
                   let size = (abs length) + 1
 
                   let ResultList =
-                      List.map (fun value -> abs value % size) list
+                      List.map (fun value -> abs value % size, true) list
                       |> List.distinct
 
                   let vector1 = VecFromList ResultList size
                   let arr = Array.create size Option.None
 
                   for i in ResultList do
-                      arr[i] <- Some true
+                      arr[fst i] <- Some true
 
                   let vector2 = SparseVector arr
 
                   Expect.equal
                   <| vector1.Memory
                   <| vector2.Memory
-                  <| "Error" ]
+                  <| "VecFromList should give the same result with SparseVector from array with the same values"
+
+              testProperty "SparseMatrix from coordinates"
+              <| fun (list: List<int * int>) (length: int) ->
+                  let size = (abs length) + 1
+
+                  let ResultList =
+                      List.map (fun (x, y) -> (abs x % size, abs y % size)) list
+                      |> List.distinct
+
+                  let arr = Array2D.create size size Option.None
+
+                  let rec Helper list =
+                      match list with
+                      | [] -> []
+                      | (x, y) :: tl ->
+                          let value = Random().Next(1, 10)
+                          arr[x, y] <- Some(Some value)
+                          (x, y, Some value) :: (Helper tl)
+
+                  let finalList = Helper ResultList
+                  let matrix1 = MatrixFromList finalList size
+                  let matrix2 = SparseMatrix(arr)
+
+                  Expect.equal
+                  <| matrix1.Memory
+                  <| matrix2.Memory
+                  <| "Something wrong with SparseMatrix from list"
+
+              testProperty "Bfs against naive bfs"
+              <| fun (list: List<int * int>) (length: int) ->
+                  if list.Length = 0 then
+                      skiptest |> ignore
+                  else
+                      let size = (abs length) + 1
+
+                      let ResultList =
+                          List.map (fun (x, y) -> (abs x % size, abs y % size, Some 10)) list
+                          |> List.distinct
+
+                      let start = [ first ResultList.Head ]
+                      let Result1 = Bfs ResultList [ first ResultList.Head, true ] size
+
+                      let arr = Array2D.create size size Option.None
+
+                      for i in ResultList do
+                          let x = first i
+                          let y = second i
+                          arr[x, y] <- third i
+
+                      let naiveBFS (start: int list) (arr: 'a option [,]) =
+                          let queue = start |> List.map (fun x -> (x, 0))
+
+                          let QueueFormatter queue apex iter =
+                              let rec inner list counter =
+                                  if counter < 0 then
+                                      list
+                                  else
+                                      let value = arr[apex, counter]
+
+                                      if value = Option.None then
+                                          inner list (counter - 1)
+                                      else
+                                          inner (list @ [ counter, iter ]) (counter - 1)
+
+                              inner queue (Array2D.length2 arr - 1)
+
+                          let rec helper queue result visited =
+                              match queue with
+                              | [] -> result
+                              | (apex, iter) :: tl ->
+                                  if List.contains apex visited then
+                                      helper tl result visited
+                                  else
+                                      let visited = apex :: visited
+                                      let newQ = QueueFormatter tl apex (iter + 1)
+                                      helper newQ (result @ [ (apex, iter) ]) visited
+
+                          if queue.IsEmpty then
+                              []
+                          else
+                              helper queue [] []
+
+                      let list = naiveBFS start arr
+                      let Result2 = VecFromList list size
+
+                      Expect.equal
+                      <| Result1.Memory
+                      <| Result2.Memory
+                      <| "Error" ]

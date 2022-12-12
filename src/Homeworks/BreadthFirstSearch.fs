@@ -9,18 +9,6 @@ let first (x, _, _) = x
 let second (_, x, _) = x
 let third (_, _, x) = x
 
-let ListVecSeparator (list: List<int>) size =
-    let rec helper list leftList rightList =
-        match list with
-        | [] -> leftList, rightList
-        | hd :: tl ->
-            if hd < size / 2 then
-                helper tl (hd :: leftList) rightList
-            else
-                helper tl leftList ((hd - size / 2) :: rightList)
-
-    helper list [] []
-
 let ListMatrixSeparator (list: List<int * int * 'a option>) size =
     let rec helper list NW NE SW SE =
         match list with
@@ -38,7 +26,19 @@ let ListMatrixSeparator (list: List<int * int * 'a option>) size =
 
     helper list [] [] [] []
 
-let VecFromList (list: List<int>) size =
+let ListVecSeparator (list: List<int * 'a>) size =
+    let rec helper list leftList rightList =
+        match list with
+        | [] -> leftList, rightList
+        | (x, y) :: tl ->
+            if x < size / 2 then
+                helper tl ((x, y) :: leftList) rightList
+            else
+                helper tl leftList ((x - size / 2, y) :: rightList)
+
+    helper list [] []
+
+let VecFromList (list: List<int * 'a>) size =
     let virtualLength = ClosestDegreeOf2 size 0
 
     let rec helper list virtualLength =
@@ -46,10 +46,10 @@ let VecFromList (list: List<int>) size =
             BinaryTree.None
         elif virtualLength = 1
              && not (List.isEmpty list)
-             && (list.Head < size) then
-            BinaryTree.Leaf(true)
+             && (fst list.Head < size) then
+            BinaryTree.Leaf(snd list.Head)
         elif virtualLength = 1
-             && ((List.isEmpty list) || (list.Head >= size)) then
+             && ((List.isEmpty list) || (fst list.Head >= size)) then
             BinaryTree.None
         else
             let lists = ListVecSeparator list virtualLength
@@ -86,19 +86,6 @@ let MatrixFromList (list: List<int * int * 'a option>) size =
 
     SparseMatrix(helper list virtualLength, size, size)
 
-let CleanVector (bool: bool option) (number: int option) =
-    match bool, number with
-    | Option.None, _ -> Option.None
-    | Some true, number -> number
-    | _ -> $"Error with cleaning the vector"
-
-let SpecialSum number1 number2 =
-    match number1, number2 with
-    | Option.None, Option.None -> Option.None
-    | Some value, Option.None -> Some value
-    | Option.None, Some value -> Some value
-    | _ -> failwith $"Something going wrong with Sum"
-
 let FrontMult bool value =
     match bool, value with
     | Option.None, _ -> Option.None
@@ -120,12 +107,19 @@ let Mask bool value =
     | Some true, _ -> Option.None
     | _ -> $"Something going wrong with Mask"
 
-let Bfs (graph: List<int * int * 'a option>) (apexes: List<int>) size =
+let SuperSum iter bool value =
+    match bool, value with
+    | Option.None, Option.None -> Option.None
+    | Option.None, value -> value
+    | Some true, Option.None -> Some iter
+    | _ -> failwith $"Something wrong with SuperSum"
+
+let Bfs (graph: List<int * int * 'a option>) (apexes: List<int * bool>) size =
     let matrix = MatrixFromList graph size
     let front = VecFromList apexes size
 
     let visited =
-        FAddVector CleanVector front (SparseVector(Array.create front.Length (Some 0)))
+        FAddVector(SuperSum 0) front (SparseVector(Array.create front.Length Option.None))
 
     let rec helper (front: SparseVector<bool>) visited (iter: int) =
         if front.isEmpty then
@@ -134,10 +128,7 @@ let Bfs (graph: List<int * int * 'a option>) (apexes: List<int>) size =
             let newFront =
                 FAddVector Mask (MultiplyVecMat front matrix FrontAdd FrontMult) visited
 
-            let integerVisited =
-                FAddVector CleanVector newFront (SparseVector(Array.create newFront.Length (Some iter)))
-
-            let visited = FAddVector SpecialSum integerVisited visited
+            let visited = FAddVector(SuperSum iter) newFront visited
             helper newFront visited (iter + 1)
 
     helper front visited 1
