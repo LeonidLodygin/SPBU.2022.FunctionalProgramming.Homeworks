@@ -224,14 +224,14 @@ var assemblies = [
   {
     "name": "Homeworks",
     "classes": [
-      { "name": "BreadthFirstSearch", "rp": "Homeworks_BreadthFirstSearch.html", "cl": 19, "ucl": 34, "cal": 53, "tl": 86, "ct": "LineCoverage", "mc": "-", "cb": 16, "tb": 44, "lch": [], "bch": [], "hc": [] },
+      { "name": "BreadthFirstSearch", "rp": "Homeworks_BreadthFirstSearch.html", "cl": 81, "ucl": 9, "cal": 90, "tl": 143, "ct": "LineCoverage", "mc": "-", "cb": 57, "tb": 76, "lch": [], "bch": [], "hc": [] },
       { "name": "FirstHomework", "rp": "Homeworks_FirstHomework.html", "cl": 25, "ucl": 10, "cal": 35, "tl": 68, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
       { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
       { "name": "IListHomework", "rp": "Homeworks_IListHomework.html", "cl": 45, "ucl": 7, "cal": 52, "tl": 107, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 42, "lch": [], "bch": [], "hc": [] },
       { "name": "MultiMatrix", "rp": "Homeworks_MultiMatrix.html", "cl": 28, "ucl": 2, "cal": 30, "tl": 58, "ct": "LineCoverage", "mc": "-", "cb": 17, "tb": 20, "lch": [], "bch": [], "hc": [] },
       { "name": "MyListHomework", "rp": "Homeworks_MyListHomework.html", "cl": 32, "ucl": 0, "cal": 32, "tl": 69, "ct": "LineCoverage", "mc": "-", "cb": 24, "tb": 24, "lch": [], "bch": [], "hc": [] },
-      { "name": "SparseMatrix", "rp": "Homeworks_SparseMatrix.html", "cl": 62, "ucl": 5, "cal": 67, "tl": 118, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 38, "lch": [], "bch": [], "hc": [] },
-      { "name": "SparseVector", "rp": "Homeworks_SparseVector.html", "cl": 52, "ucl": 5, "cal": 57, "tl": 119, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 36, "lch": [], "bch": [], "hc": [] },
+      { "name": "SparseMatrix", "rp": "Homeworks_SparseMatrix.html", "cl": 65, "ucl": 2, "cal": 67, "tl": 118, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 38, "lch": [], "bch": [], "hc": [] },
+      { "name": "SparseVector", "rp": "Homeworks_SparseVector.html", "cl": 56, "ucl": 4, "cal": 60, "tl": 124, "ct": "LineCoverage", "mc": "-", "cb": 33, "tb": 38, "lch": [], "bch": [], "hc": [] },
       { "name": "TreeHomework", "rp": "Homeworks_TreeHomework.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 27, "ct": "LineCoverage", "mc": "-", "cb": 2, "tb": 2, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
@@ -246,18 +246,11 @@ var riskHotspotMetrics = [
 
 var riskHotspots = [
   {
-    "assembly": "Homeworks", "class": "BreadthFirstSearch", "reportPath": "Homeworks_BreadthFirstSearch.html", "methodName": "SparseMatrix/QuadTree`1<Microsoft.FSharp.Core.FSharpOption`1<b>> BreadthFirstSearch/helper@64-5T::Invoke(Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,Microsoft.FSharp.Core.FSharpOption`1<b>>>,System.Int32)", "methodShortName": "Invoke(...)", "fileIndex": 0, "line": 65,
+    "assembly": "Homeworks", "class": "BreadthFirstSearch", "reportPath": "Homeworks_BreadthFirstSearch.html", "methodName": "SparseMatrix/QuadTree`1<Microsoft.FSharp.Core.FSharpOption`1<b>> BreadthFirstSearch/helper@65-5T::Invoke(Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,Microsoft.FSharp.Core.FSharpOption`1<b>>>,System.Int32)", "methodShortName": "Invoke(...)", "fileIndex": 0, "line": 66,
     "metrics": [
       { "value": 10, "exceeded": false },
       { "value": 512, "exceeded": true },
-      { "value": 110, "exceeded": true },
-    ]},
-  {
-    "assembly": "Homeworks", "class": "BreadthFirstSearch", "reportPath": "Homeworks_BreadthFirstSearch.html", "methodName": "System.Tuple`4<Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,b>>,Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,b>>,Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,b>>,Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,b>>> BreadthFirstSearch/helper@24-3T::Invoke(Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,b>>,Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,b>>,Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,b>>,Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,b>>,Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.Int32,System.Int32,b>>)", "methodShortName": "Invoke(...)", "fileIndex": 0, "line": 25,
-    "metrics": [
-      { "value": 5, "exceeded": false },
-      { "value": 16, "exceeded": false },
-      { "value": 30, "exceeded": true },
+      { "value": 10.16, "exceeded": false },
     ]},
   {
     "assembly": "Homeworks", "class": "FirstHomework", "reportPath": "Homeworks_FirstHomework.html", "methodName": "a FirstHomework::MinMaxFromArray(value[])", "methodShortName": "MinMaxFromArray(...)", "fileIndex": 0, "line": 44,

@@ -2,6 +2,7 @@
 
 open SparseVector
 open SparseMatrix
+open MultiMatrix
 open FSharp.Collections
 
 let first (x, _, _) = x
@@ -84,3 +85,59 @@ let MatrixFromList (list: List<int * int * 'a option>) size =
             |> NoneDestroyer
 
     SparseMatrix(helper list virtualLength, size, size)
+
+let CleanVector (bool: bool option) (number: int option) =
+    match bool, number with
+    | Option.None, _ -> Option.None
+    | Some true, number -> number
+    | _ -> $"Error with cleaning the vector"
+
+let SpecialSum number1 number2 =
+    match number1, number2 with
+    | Option.None, Option.None -> Option.None
+    | Some value, Option.None -> Some value
+    | Option.None, Some value -> Some value
+    | _ -> failwith $"Something going wrong with Sum"
+
+let FrontMult bool value =
+    match bool, value with
+    | Option.None, _ -> Option.None
+    | Some true, Option.None -> Option.None
+    | Some true, _ -> Some true
+    | _ -> $"Something going wrong with fMult"
+
+let FrontAdd bool bool2 =
+    match bool, bool2 with
+    | Option.None, Option.None -> Option.None
+    | Some true, _ -> Some true
+    | _, Some true -> Some true
+    | _ -> $"Something going wrong with fAdd"
+
+let Mask bool value =
+    match bool, value with
+    | Option.None, _ -> Option.None
+    | Some true, Option.None -> Some true
+    | Some true, _ -> Option.None
+    | _ -> $"Something going wrong with Mask"
+
+let Bfs (graph: List<int * int * 'a option>) (apexes: List<int>) size =
+    let matrix = MatrixFromList graph size
+    let front = VecFromList apexes size
+
+    let visited =
+        FAddVector CleanVector front (SparseVector(Array.create front.Length (Some 0)))
+
+    let rec helper (front: SparseVector<bool>) visited (iter: int) =
+        if front.isEmpty then
+            visited
+        else
+            let newFront =
+                FAddVector Mask (MultiplyVecMat front matrix FrontAdd FrontMult) visited
+
+            let integerVisited =
+                FAddVector CleanVector newFront (SparseVector(Array.create newFront.Length (Some iter)))
+
+            let visited = FAddVector SpecialSum integerVisited visited
+            helper newFront visited (iter + 1)
+
+    helper front visited 1

@@ -86,6 +86,11 @@ type SparseVector<'value when 'value: equality> =
 
                 GetElementByIndex this.Memory virtualLength i
 
+    member this.isEmpty =
+        match this.Memory with
+        | BinaryTree.None -> true
+        | _ -> false
+
 let NoneOrValue x =
     match x with
     | Option.None -> None
