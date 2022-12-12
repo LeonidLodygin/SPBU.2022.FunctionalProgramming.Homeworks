@@ -76,7 +76,42 @@ module SimpleTests =
 
                   Expect.equal Result.Memory
                   <| Node(Node(Leaf 0, Leaf 1), Node(None, Leaf 2))
-                  <| "Bfs should return \"Node(Node(Leaf 0, Leaf 1), Node(None, Leaf 2))\" from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0]" ]
+                  <| "Bfs should return \"Node(Node(Leaf 0, Leaf 1), Node(None, Leaf 2))\" from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0]"
+              testCase "Bfs with some graph and zero apexes"
+              <| fun _ ->
+                  let Result =
+                      Bfs
+                          [ (0, 1, Some 4)
+                            (1, 0, Some 4)
+                            (1, 3, Some 9)
+                            (3, 1, Some 9) ]
+                          []
+                          4
+
+                  Expect.equal Result.Memory
+                  <| None
+                  <| "Bfs should return \"BinaryTree.None\" from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and zero start positions"
+              testCase "Bfs with some graph and all apexes"
+              <| fun _ ->
+                  let Result =
+                      Bfs
+                          [ (0, 1, Some 4)
+                            (1, 0, Some 4)
+                            (1, 3, Some 9)
+                            (3, 1, Some 9) ]
+                          [ 0, true; 1, true; 2, true; 3, true ]
+                          4
+
+                  Expect.equal Result.Memory
+                  <| Node(Node(Leaf 0, Leaf 0), Node(Leaf 0, Leaf 0))
+                  <| "Bfs should return \"Node(Node(Leaf 0, Leaf 0),Node(Leaf 0, Leaf 0))\" from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0, 1, 2, 3]"
+              testCase "Bfs with empty graph and zero apexes"
+              <| fun _ ->
+                  let Result = Bfs [] [] 0
+
+                  Expect.equal Result.Memory
+                  <| None
+                  <| "Bfs should return \"None\" from empty graph and zero start positions" ]
 
 module PropertyTests =
     [<Tests>]
