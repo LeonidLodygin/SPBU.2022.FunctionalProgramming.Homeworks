@@ -22,6 +22,8 @@ type QuadTree<'value> =
     | Leaf of 'value
     | None
 
+
+
 let Separator (matrix: Matrix<'value>) =
     Matrix(matrix.Memory, matrix.CoordinatesOfHead, matrix.Columns / 2, matrix.Lines / 2),
     Matrix(
@@ -48,6 +50,53 @@ let NoneDestroyer (tree: QuadTree<'value>) =
     | Leaf value -> Leaf value
     | Node (None, None, None, None) -> None
     | _ -> tree
+
+let ListMatrixSeparator list size =
+    let rec Helper list NW NE SW SE =
+        match list with
+        | [] -> NW, NE, SW, SE
+        | (x, y, value) :: tl ->
+            if x < size / 2 then
+                if y < size / 2 then
+                    Helper tl ((x, y, value) :: NW) NE SW SE
+                else
+                    Helper tl NW ((x, y - size / 2, value) :: NE) SW SE
+            else if y < size / 2 then
+                Helper tl NW NE ((x - size / 2, y, value) :: SW) SE
+            else
+                Helper tl NW NE SW ((x - size / 2, y - size / 2, value) :: SE)
+
+    Helper list [] [] [] []
+
+let MatrixFromList list size =
+    let virtualLength = ClosestDegreeOf2 size 0
+
+    let rec Helper list length =
+        if length = 0 then
+            QuadTree.None
+        elif length = 1
+             && not (List.isEmpty list)
+             && (First list.Head < size && Second list.Head < size) then
+            QuadTree.Leaf(Third list.Head)
+        elif length = 1
+             && ((List.isEmpty list)
+                 || (First list.Head > size || Second list.Head > size)) then
+            QuadTree.None
+        else
+            let NW, NE, SW, SE = ListMatrixSeparator list length
+
+            QuadTree.Node(
+                Helper NW (length / 2),
+                Helper NE (length / 2),
+                Helper SW (length / 2),
+                Helper SE (length / 2)
+            )
+            |> NoneDestroyer
+
+    Helper list virtualLength
+
+
+
 
 let Transformer (arr: 'value option [,]) =
     let virtualLength = ClosestDegreeOf2(Array2D.length1 arr) (Array2D.length2 arr)
@@ -92,6 +141,11 @@ type SparseMatrix<'value when 'value: equality> =
         { Memory = tree
           Lines = lines
           Columns = columns }
+
+    new(list, size) =
+        { Memory = MatrixFromList list size
+          Lines = size
+          Columns = size }
 
     member this.Item
         with get (x, y) =

@@ -3,6 +3,10 @@
 open System
 open Microsoft.FSharp.Core
 
+let First (x, _, _) = x
+let Second (_, x, _) = x
+let Third (_, _, x) = x
+
 type Vector<'value> =
     struct
         val Memory: array<'value option>
