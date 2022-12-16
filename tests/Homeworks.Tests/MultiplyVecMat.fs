@@ -15,37 +15,37 @@ module SimpleTests =
             "Some simple tests"
             [ testCase "Degree of 2 from 5"
               <| fun _ ->
-                  let Result = ClosestDegreeOf2 5 0
+                  let Result = ClosestDegreeOf2 5u 0u
 
                   Expect.equal
                   <| Result
-                  <| 8
+                  <| 8u
                   <| "Closest degree of 2 from 5 is 2^3 = 8"
               testCase "Degree of 2 from zero"
               <| fun _ ->
-                  let Result = ClosestDegreeOf2 0 0
+                  let Result = ClosestDegreeOf2 0u 0u
 
                   Expect.equal
                   <| Result
-                  <| 0
+                  <| 0u
                   <| "Closest degree of 2 from 0 is 0"
               testCase "Degree of 2 from 5 or 9"
               <| fun _ ->
-                  let Result = ClosestDegreeOf2 5 9
+                  let Result = ClosestDegreeOf2 5u 9u
 
                   Expect.equal
                   <| Result
-                  <| 16
+                  <| 16u
                   <| "Closest degree of 2 from max of (5 or 9)  is 2^4 = 16"
               testCase "Separation of vector"
               <| fun _ ->
                   let Result =
                       Separator
-                      <| Vector([| Some 1; Some 2; Some 3; Some 4 |], 0, 4)
+                      <| Vector([| Some 1; Some 2; Some 3; Some 4 |], 0u, 4u)
 
                   Expect.equal
                   <| ((fst Result).Head, (fst Result).Length, (snd Result).Head, (snd Result).Length)
-                  <| (0, 2, 2, 2)
+                  <| (0u, 2u, 2u, 2u)
                   <| "Separation of Vector [|Some 1; Some 2; Some 3; Some 4|] should be two vectors with lengths 2"
               testCase "Destroying nodes with nones"
               <| fun _ ->
@@ -78,7 +78,7 @@ module SimpleTests =
 
                   Expect.equal
                   <| (Result.Memory, Result.Length)
-                  <| (Node(Node(Leaf 1, Leaf 2), Node(Leaf 3, Leaf 4)), 4)
+                  <| (Node(Node(Leaf 1, Leaf 2), Node(Leaf 3, Leaf 4)), 4u)
                   <| "SparseVector of [|Some 1; Some 2; Some 3; Some 4|] should be Node(Node(Leaf 1, Leaf 2), Node(Leaf 3, Leaf 4)) in Memory with Length 4"
               testCase "Separation of matrix"
               <| fun _ ->
@@ -87,9 +87,9 @@ module SimpleTests =
                       <| Matrix(
                           array2D [ [ Some 1; Some 2 ]
                                     [ Some 3; Some 4 ] ],
-                          (0, 0),
-                          2,
-                          2
+                          (0u, 0u),
+                          2u,
+                          2u
                       )
 
                   Expect.equal
@@ -97,7 +97,7 @@ module SimpleTests =
                       (snd.Columns, snd.Lines),
                       (thd.Columns, thd.Lines),
                       (fth.Columns, fth.Lines))
-                  <| ((1, 1), (1, 1), (1, 1), (1, 1))
+                  <| ((1u, 1u), (1u, 1u), (1u, 1u), (1u, 1u))
                   <| "Separation of Matrix 2x2 should be 4 matrices 1x1"
               testCase "Destroying nodes with nones in matrices"
               <| fun _ ->
@@ -144,8 +144,8 @@ module SimpleTests =
                           QuadTree.Node(QuadTree.None, QuadTree.Leaf 5, QuadTree.None, QuadTree.None),
                           QuadTree.None
                       ),
-                      2,
-                      3)
+                      2u,
+                      3u)
                   <| "SparseMatrix from [[Some 1; Some 2]; [Some 3; Some 4]; [Option.None; Some(5)]] should be SparseMatrix with 2 columns and 3 lines and with Node(Node(Leaf 1, Leaf 2, Leaf 3, Leaf 4), None, Node(None, Leaf 5, None, None), None) in Memory"
               testCase "Let's cut some trees!"
               <| fun _ ->
@@ -206,7 +206,7 @@ module MultiplyTests =
 
                   Expect.equal
                   <| (Result.Memory, Result.Length)
-                  <| (Node(Node(Leaf 4, Leaf 3), Node(Leaf 14, None)), 3)
+                  <| (Node(Node(Leaf 4, Leaf 3), Node(Leaf 14, None)), 3u)
                   <| "Multiply SparseVector from [|Some 1; Some 2|] on SparseMatrix from array2D [[Some 2; Some 3; Some 4]; [Some 1; Option.None; Some 5]] should be SparseVector with Node(Node(Leaf 4, Leaf 3), Node(Leaf 14, None)) in memory and length 3"
               testCase "Empty vec on empty matrix"
               <| fun _ ->
@@ -216,7 +216,7 @@ module MultiplyTests =
 
                   Expect.equal
                   <| (Result.Memory, Result.Length)
-                  <| (None, 0)
+                  <| (None, 0u)
                   <| "Multiply empty SparseVector on empty SparseMatrix should be SparseVector with None in memory and length 0"
               testCase "Vec with length 1 on matrix with 1 column and line"
               <| fun _ ->
@@ -226,7 +226,7 @@ module MultiplyTests =
 
                   Expect.equal
                   <| (Result.Memory, Result.Length)
-                  <| (Leaf 2, 1)
+                  <| (Leaf 2, 1u)
                   <| "Multiply SparseVector from [|Some 1|] on SparseMatrix from [[Some 2]] should be SparseVector with Leaf 2 in memory and length 1" ]
 
 module SomePropertyTests =
@@ -238,11 +238,11 @@ module SomePropertyTests =
               <| fun (arr: array<int option>) ->
                   let length =
                       if arr.Length = 1 then
-                          2
+                          2u
                       else
-                          ClosestDegreeOf2 arr.Length 0
+                          ClosestDegreeOf2(uint arr.Length) 0u
 
-                  let vec = Vector(arr, 0, length)
+                  let vec = Vector(arr, 0u, length)
                   let Result = Separator vec
 
                   Expect.equal
@@ -259,23 +259,23 @@ module SomePropertyTests =
                   else
                       Expect.equal
                       <| arr[r]
-                      <| Result[r]
+                      <| Result[uint r]
                       <| "Item from the cell of array should be equal to item from the cell of SparseVector"
               testProperty "Columns and lines of separated matrix"
               <| fun (arr: int option [,]) ->
                   let length =
                       if Array2D.length2 arr = 1 || Array2D.length1 arr = 1 then
                           max
-                          <| 2
+                          <| 2u
                           <| (ClosestDegreeOf2
-                              <| Array2D.length2 arr
-                              <| Array2D.length1 arr)
+                              <| uint (Array2D.length2 arr)
+                              <| uint (Array2D.length1 arr))
                       else
                           ClosestDegreeOf2
-                          <| Array2D.length2 arr
-                          <| Array2D.length1 arr
+                          <| uint (Array2D.length2 arr)
+                          <| uint (Array2D.length1 arr)
 
-                  let matrix = Matrix(arr, (0, 0), length, length)
+                  let matrix = Matrix(arr, (0u, 0u), length, length)
                   let x, y, z, w = SparseMatrix.Separator matrix
 
                   Expect.equal
@@ -293,7 +293,7 @@ module SomePropertyTests =
                   else
                       Expect.equal
                       <| arr[y, x]
-                      <| Result[x, y]
+                      <| Result[uint x, uint y]
                       <| "Item from the cell of array2D should be equal to item from the cell of SparseMatrix" ]
 
 module SpecialPropertyTests =
