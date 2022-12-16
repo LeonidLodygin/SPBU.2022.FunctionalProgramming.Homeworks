@@ -1,13 +1,14 @@
 ﻿module SparseMatrix
 
 open SparseVector
+open System
 
 type Matrix<'value> =
     struct
         val Memory: 'value option [,]
-        val CoordinatesOfHead: int * int
-        val Columns: int
-        val Lines: int
+        val CoordinatesOfHead: uint * uint
+        val Columns: uint
+        val Lines: uint
 
         new(memory, head, columns, lines) =
             { Memory = memory
@@ -22,27 +23,25 @@ type QuadTree<'value> =
     | Leaf of 'value
     | None
 
-
-
 let Separator (matrix: Matrix<'value>) =
-    Matrix(matrix.Memory, matrix.CoordinatesOfHead, matrix.Columns / 2, matrix.Lines / 2),
+    Matrix(matrix.Memory, matrix.CoordinatesOfHead, matrix.Columns / 2u, matrix.Lines / 2u),
     Matrix(
         matrix.Memory,
-        (fst matrix.CoordinatesOfHead + matrix.Columns / 2, snd matrix.CoordinatesOfHead),
-        matrix.Columns / 2,
-        matrix.Lines / 2
+        (fst matrix.CoordinatesOfHead + matrix.Columns / 2u, snd matrix.CoordinatesOfHead),
+        matrix.Columns / 2u,
+        matrix.Lines / 2u
     ),
     Matrix(
         matrix.Memory,
-        (fst matrix.CoordinatesOfHead, snd matrix.CoordinatesOfHead + matrix.Lines / 2),
-        matrix.Columns / 2,
-        matrix.Lines / 2
+        (fst matrix.CoordinatesOfHead, snd matrix.CoordinatesOfHead + matrix.Lines / 2u),
+        matrix.Columns / 2u,
+        matrix.Lines / 2u
     ),
     Matrix(
         matrix.Memory,
-        (fst matrix.CoordinatesOfHead + matrix.Columns / 2, snd matrix.CoordinatesOfHead + matrix.Lines / 2),
-        matrix.Columns / 2,
-        matrix.Lines / 2
+        (fst matrix.CoordinatesOfHead + matrix.Columns / 2u, snd matrix.CoordinatesOfHead + matrix.Lines / 2u),
+        matrix.Columns / 2u,
+        matrix.Lines / 2u
     )
 
 let NoneDestroyer (tree: QuadTree<'value>) =
@@ -51,34 +50,34 @@ let NoneDestroyer (tree: QuadTree<'value>) =
     | Node (None, None, None, None) -> None
     | _ -> tree
 
-let ListMatrixSeparator list size =
+let ListMatrixSeparator list (size: uint) =
     let rec Helper list NW NE SW SE =
         match list with
         | [] -> NW, NE, SW, SE
         | (x, y, value) :: tl ->
-            if x < size / 2 then
-                if y < size / 2 then
+            if x < size / 2u then
+                if y < size / 2u then
                     Helper tl ((x, y, value) :: NW) NE SW SE
                 else
-                    Helper tl NW ((x, y - size / 2, value) :: NE) SW SE
-            else if y < size / 2 then
-                Helper tl NW NE ((x - size / 2, y, value) :: SW) SE
+                    Helper tl NW ((x, y - size / 2u, value) :: NE) SW SE
+            else if y < size / 2u then
+                Helper tl NW NE ((x - size / 2u, y, value) :: SW) SE
             else
-                Helper tl NW NE SW ((x - size / 2, y - size / 2, value) :: SE)
+                Helper tl NW NE SW ((x - size / 2u, y - size / 2u, value) :: SE)
 
     Helper list [] [] [] []
 
 let MatrixFromList list size =
-    let virtualLength = ClosestDegreeOf2 size 0
+    let virtualLength = ClosestDegreeOf2 size 0u
 
     let rec Helper list length =
-        if length = 0 then
+        if length = 0u then
             QuadTree.None
-        elif length = 1
+        elif length = 1u
              && not (List.isEmpty list)
              && (First list.Head < size && Second list.Head < size) then
             QuadTree.Leaf(Third list.Head)
-        elif length = 1
+        elif length = 1u
              && ((List.isEmpty list)
                  || (First list.Head > size || Second list.Head > size)) then
             QuadTree.None
@@ -86,36 +85,41 @@ let MatrixFromList list size =
             let NW, NE, SW, SE = ListMatrixSeparator list length
 
             QuadTree.Node(
-                Helper NW (length / 2),
-                Helper NE (length / 2),
-                Helper SW (length / 2),
-                Helper SE (length / 2)
+                Helper NW (length / 2u),
+                Helper NE (length / 2u),
+                Helper SW (length / 2u),
+                Helper SE (length / 2u)
             )
             |> NoneDestroyer
 
     Helper list virtualLength
 
-
-
-
 let Transformer (arr: 'value option [,]) =
-    let virtualLength = ClosestDegreeOf2(Array2D.length1 arr) (Array2D.length2 arr)
-    let virtualMatrix = Matrix(arr, (0, 0), virtualLength, virtualLength)
+    let virtualLength =
+        ClosestDegreeOf2(uint (Array2D.length1 arr)) (uint (Array2D.length2 arr))
+
+    let virtualMatrix = Matrix(arr, (0u, 0u), virtualLength, virtualLength)
 
     let rec helper (virtualMatrix: Matrix<'value>) =
         if fst virtualMatrix.CoordinatesOfHead
-           >= Array2D.length2 arr
+           >= uint (Array2D.length2 arr)
            || snd virtualMatrix.CoordinatesOfHead
-              >= Array2D.length1 arr then
+              >= uint (Array2D.length1 arr) then
             None
-        elif virtualMatrix.Columns = 1
-             && virtualMatrix.Lines = 1 then
-            if virtualMatrix.Memory[snd virtualMatrix.CoordinatesOfHead, fst virtualMatrix.CoordinatesOfHead] = Option.None then
+        elif virtualMatrix.Columns = 1u
+             && virtualMatrix.Lines = 1u then
+            let uHead =
+                try
+                    Convert.ToInt32(fst virtualMatrix.CoordinatesOfHead),
+                    Convert.ToInt32(snd virtualMatrix.CoordinatesOfHead)
+                with
+                | :? OverflowException ->
+                    failwith $"%A{virtualMatrix.CoordinatesOfHead} is outside the range of the Int32 type."
+
+            if virtualMatrix.Memory[snd uHead, fst uHead] = Option.None then
                 None
             else
-                Leaf
-                    virtualMatrix.Memory[snd virtualMatrix.CoordinatesOfHead, fst virtualMatrix.CoordinatesOfHead]
-                        .Value
+                Leaf virtualMatrix.Memory[snd uHead, fst uHead].Value
         else
             let fst, snd, thd, fth = Separator virtualMatrix
 
@@ -129,23 +133,23 @@ let Transformer (arr: 'value option [,]) =
 
 type SparseMatrix<'value when 'value: equality> =
     val Memory: QuadTree<'value>
-    val Lines: int
-    val Columns: int
+    val Lines: uint
+    val Columns: uint
 
     new(arr) =
         { Memory = Transformer arr
-          Lines = Array2D.length1 arr
-          Columns = Array2D.length2 arr }
+          Lines = uint (Array2D.length1 arr)
+          Columns = uint (Array2D.length2 arr) }
 
     new(tree, lines, columns) =
         { Memory = tree
           Lines = lines
           Columns = columns }
 
-    new(list, size) =
-        { Memory = MatrixFromList list size
-          Lines = size
-          Columns = size }
+    new(list, lines, columns) =
+        { Memory = MatrixFromList list (max lines columns)
+          Lines = lines
+          Columns = columns }
 
     member this.Item
         with get (x, y) =
@@ -159,14 +163,14 @@ type SparseMatrix<'value when 'value: equality> =
                     | None -> Option.None
                     | Leaf value -> Some value
                     | Node (fst, snd, thd, fth) ->
-                        if x < columns / 2 then
-                            if y < lines / 2 then
-                                GetElementByIndex fst (columns / 2) (lines / 2) x y
+                        if x < columns / 2u then
+                            if y < lines / 2u then
+                                GetElementByIndex fst (columns / 2u) (lines / 2u) x y
                             else
-                                GetElementByIndex thd (columns / 2) (lines / 2) x (y - lines / 2)
-                        else if y < lines / 2 then
-                            GetElementByIndex snd (columns / 2) (lines / 2) (x - columns / 2) y
+                                GetElementByIndex thd (columns / 2u) (lines / 2u) x (y - lines / 2u)
+                        else if y < lines / 2u then
+                            GetElementByIndex snd (columns / 2u) (lines / 2u) (x - columns / 2u) y
                         else
-                            GetElementByIndex fth (columns / 2) (lines / 2) (x - columns / 2) (y - lines / 2)
+                            GetElementByIndex fth (columns / 2u) (lines / 2u) (x - columns / 2u) (y - lines / 2u)
 
                 GetElementByIndex this.Memory virtualLength virtualLength x y

@@ -10,8 +10,8 @@ let Third (_, _, x) = x
 type Vector<'value> =
     struct
         val Memory: array<'value option>
-        val Head: int
-        val Length: int
+        val Head: uint
+        val Length: uint
 
         new(memory, head, length) =
             { Memory = memory
@@ -24,14 +24,14 @@ type BinaryTree<'value> =
     | Leaf of 'value
     | None
 
-let ClosestDegreeOf2 columns lines =
-    int (
+let ClosestDegreeOf2 (columns: uint) (lines: uint) =
+    uint (
         2.0
         ** Math.Ceiling(Math.Log(float (max columns lines), 2.0))
     )
 
 let Separator (vec: Vector<'value>) =
-    Vector(vec.Memory, vec.Head, vec.Length / 2), Vector(vec.Memory, vec.Head + vec.Length / 2, vec.Length / 2)
+    Vector(vec.Memory, vec.Head, vec.Length / 2u), Vector(vec.Memory, vec.Head + vec.Length / 2u, vec.Length / 2u)
 
 let NoneDestroyer (tree: BinaryTree<'value>) =
     match tree with
@@ -40,17 +40,23 @@ let NoneDestroyer (tree: BinaryTree<'value>) =
     | _ -> tree
 
 let Transformer (arr: array<'value option>) =
-    let virtualLength = ClosestDegreeOf2 arr.Length 0
-    let virtualVec = Vector(arr, 0, virtualLength)
+    let virtualLength = ClosestDegreeOf2(uint arr.Length) 0u
+    let virtualVec = Vector(arr, 0u, virtualLength)
 
     let rec helper (virtualVec: Vector<'value>) =
-        if virtualVec.Head >= arr.Length then
+        if virtualVec.Head >= uint arr.Length then
             None
-        elif virtualVec.Length = 1 then
-            if virtualVec.Memory[virtualVec.Head] = Option.None then
+        elif virtualVec.Length = 1u then
+            let uHead =
+                try
+                    Convert.ToInt32(virtualVec.Head)
+                with
+                | :? OverflowException -> failwith $"%A{virtualVec.Head} is outside the range of the Int32 type."
+
+            if virtualVec.Memory[uHead] = Option.None then
                 None
             else
-                Leaf (virtualVec.Memory[virtualVec.Head]).Value
+                Leaf (virtualVec.Memory[uHead]).Value
         else
             let leftTree = helper (fst (Separator virtualVec))
             let rightTree = helper (snd (Separator virtualVec))
@@ -61,32 +67,69 @@ let Transformer (arr: array<'value option>) =
     else
         helper virtualVec
 
+let ListVecSeparator (list: List<uint * 'a>) size =
+    let rec helper list leftList rightList =
+        match list with
+        | [] -> leftList, rightList
+        | (x, y) :: tl ->
+            if x < size / 2u then
+                helper tl ((x, y) :: leftList) rightList
+            else
+                helper tl leftList ((x - size / 2u, y) :: rightList)
+
+    helper list [] []
+
+let VecFromList (list: List<uint * 'a>) size =
+    let virtualLength = ClosestDegreeOf2 size 0u
+
+    let rec helper list virtualLength =
+        if virtualLength = 0u then
+            BinaryTree.None
+        elif virtualLength = 1u
+             && not (List.isEmpty list)
+             && (fst list.Head < size) then
+            BinaryTree.Leaf(snd list.Head)
+        elif virtualLength = 1u
+             && ((List.isEmpty list) || (fst list.Head >= size)) then
+            BinaryTree.None
+        else
+            let lists = ListVecSeparator list virtualLength
+
+            BinaryTree.Node(helper (fst lists) (virtualLength / 2u), helper (snd lists) (virtualLength / 2u))
+            |> NoneDestroyer
+
+    helper list virtualLength
+
 type SparseVector<'value when 'value: equality> =
     val Memory: BinaryTree<'value>
-    val Length: int
+    val Length: uint
 
     new(arr) =
         { Memory = Transformer arr
-          Length = arr.Length }
+          Length = uint arr.Length }
 
     new(tree, length) = { Memory = tree; Length = length }
+
+    new(list, length) =
+        { Memory = VecFromList list length
+          Length = length }
 
     member this.Item
         with get i =
             if i >= this.Length then
                 failwith $"Index %A{i} is out of range."
             else
-                let virtualLength = ClosestDegreeOf2 this.Length 0
+                let virtualLength = ClosestDegreeOf2 this.Length 0u
 
                 let rec GetElementByIndex tree length index =
                     match tree with
                     | None -> Option.None
                     | Leaf value -> Some value
                     | Node (left, right) ->
-                        if index < length / 2 then
-                            GetElementByIndex left (length / 2) index
+                        if index < length / 2u then
+                            GetElementByIndex left (length / 2u) index
                         else
-                            GetElementByIndex right (length / 2) (index - length / 2)
+                            GetElementByIndex right (length / 2u) (index - length / 2u)
 
                 GetElementByIndex this.Memory virtualLength i
 

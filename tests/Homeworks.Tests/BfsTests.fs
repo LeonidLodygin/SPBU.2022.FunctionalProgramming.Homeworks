@@ -1,8 +1,10 @@
 ﻿module Homeworks.BfsTests
 
 open System
+open System.Collections.Generic
 open Expecto
 open Microsoft.FSharp.Core
+open Microsoft.FSharp.Collections
 open SparseMatrix
 open SparseVector
 open BreadthFirstSearch
@@ -14,7 +16,7 @@ module SimpleTests =
             "Some simple tests"
             [ testCase "Matrix from empty list"
               <| fun _ ->
-                  let Result = MatrixFromList [] 0
+                  let Result = MatrixFromList [] 0u
 
                   Expect.equal
                   <| Result
@@ -24,11 +26,11 @@ module SimpleTests =
               <| fun _ ->
                   let Result =
                       MatrixFromList
-                          [ (0, 1, Some 4)
-                            (1, 0, Some 4)
-                            (1, 3, Some 9)
-                            (3, 1, Some 9) ]
-                          4
+                          [ (0u, 1u, Some 4)
+                            (1u, 0u, Some 4)
+                            (1u, 3u, Some 9)
+                            (3u, 1u, Some 9) ]
+                          4u
 
                   Expect.equal
                   <| Result
@@ -42,26 +44,26 @@ module SimpleTests =
               testCase "Bfs with some graph and apexes"
               <| fun _ ->
                   let list =
-                      [ (0, 1, Some 4)
-                        (1, 0, Some 4)
-                        (1, 3, Some 9)
-                        (3, 1, Some 9) ]
+                      [ (0u, 1u, Some 4)
+                        (1u, 0u, Some 4)
+                        (1u, 3u, Some 9)
+                        (3u, 1u, Some 9) ]
 
-                  let matrix = SparseMatrix(list, 4)
-                  let Result = Bfs matrix [ 0 ]
+                  let matrix = SparseMatrix(list, 4u, 4u)
+                  let Result = Bfs matrix [ 0u ]
 
                   Expect.equal Result.Memory
-                  <| Node(Node(Leaf 0, Leaf 1), Node(None, Leaf 2))
+                  <| Node(Node(Leaf 0u, Leaf 1u), Node(None, Leaf 2u))
                   <| "Bfs should return \"Node(Node(Leaf 0, Leaf 1), Node(None, Leaf 2))\" from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0]"
               testCase "Bfs with some graph and zero apexes"
               <| fun _ ->
                   let list =
-                      [ (0, 1, Some 4)
-                        (1, 0, Some 4)
-                        (1, 3, Some 9)
-                        (3, 1, Some 9) ]
+                      [ (0u, 1u, Some 4)
+                        (1u, 0u, Some 4)
+                        (1u, 3u, Some 9)
+                        (3u, 1u, Some 9) ]
 
-                  let matrix = SparseMatrix(list, 4)
+                  let matrix = SparseMatrix(list, 4u, 4u)
                   let Result = Bfs matrix []
 
                   Expect.equal Result.Memory
@@ -70,21 +72,21 @@ module SimpleTests =
               testCase "Bfs with some graph and all apexes"
               <| fun _ ->
                   let list =
-                      [ (0, 1, Some 4)
-                        (1, 0, Some 4)
-                        (1, 3, Some 9)
-                        (3, 1, Some 9) ]
+                      [ (0u, 1u, Some 4)
+                        (1u, 0u, Some 4)
+                        (1u, 3u, Some 9)
+                        (3u, 1u, Some 9) ]
 
-                  let matrix = SparseMatrix(list, 4)
-                  let Result = Bfs matrix [ 0; 1; 2; 3 ]
+                  let matrix = SparseMatrix(list, 4u, 4u)
+                  let Result = Bfs matrix [ 0u; 1u; 2u; 3u ]
 
                   Expect.equal Result.Memory
-                  <| Node(Node(Leaf 0, Leaf 0), Node(Leaf 0, Leaf 0))
+                  <| Node(Node(Leaf 0u, Leaf 0u), Node(Leaf 0u, Leaf 0u))
                   <| "Bfs should return \"Node(Node(Leaf 0, Leaf 0),Node(Leaf 0, Leaf 0))\" from [(0, 1, Some 4);(1, 0, Some 4);(1, 3, Some 9); (3, 1, Some 9)] and start position in [0, 1, 2, 3]"
               testCase "Bfs with empty graph and zero apexes"
               <| fun _ ->
                   let list = []
-                  let matrix = SparseMatrix(list, 0)
+                  let matrix = SparseMatrix(list, 0u, 0u)
                   let Result = Bfs matrix []
 
                   Expect.equal Result.Memory
@@ -97,21 +99,38 @@ module PropertyTests =
         testList
             "Some property tests"
             [ testProperty "SparseMatrix from coordinates"
-              <| fun (list: List<int * int>) (length: int) ->
-                  let size = (abs length) + 1
+              <| fun (list: List<uint * uint>) ->
+                  let size =
+                      if list.IsEmpty then
+                          0u
+                      else
+                          let x = List.maxBy fst list
+                          let y = List.maxBy snd list
+                          (max (fst x) (snd y)) + 1u
 
-                  let ResultList =
-                      List.map (fun (x, y) -> (abs x % size, abs y % size)) list
-                      |> List.distinct
+                  let ResultList = list |> List.distinct
 
-                  let arr = Array2D.create size size Option.None
+                  let iSize =
+                      try
+                          Convert.ToInt32(size)
+                      with
+                      | :? OverflowException -> failwith $"%A{size} is outside the range of the Int32 type."
 
-                  let rec Helper list =
+                  let arr = Array2D.create iSize iSize Option.None
+
+                  let rec Helper (list: List<uint * uint>) =
                       match list with
                       | [] -> []
                       | (x, y) :: tl ->
                           let value = Random().Next(1, 10)
-                          arr[x, y] <- Some(Some value)
+
+                          let uHead =
+                              try
+                                  Convert.ToInt32(x), Convert.ToInt32(y)
+                              with
+                              | :? OverflowException -> failwith $"%A{(x, y)} is outside the range of the Int32 type."
+
+                          arr[fst uHead, snd uHead] <- Some(Some value)
                           (x, y, Some value) :: (Helper tl)
 
                   let finalList = Helper ResultList
@@ -124,11 +143,17 @@ module PropertyTests =
                   <| "Something wrong with SparseMatrix from list"
 
               testProperty "Bfs against naive bfs"
-              <| fun (list: List<int * int>) (length: int) ->
-                  let size = (abs length) + 1
+              <| fun (list: List<uint * uint>) ->
+                  let size =
+                      if list.IsEmpty then
+                          0u
+                      else
+                          let x = List.maxBy fst list
+                          let y = List.maxBy snd list
+                          (max (fst x) (snd y)) + 1u
 
                   let resultList =
-                      List.map (fun (x, y) -> (abs x % size, abs y % size, Some 10)) list
+                      List.map (fun (x, y) -> (x, y, Some 10)) list
                       |> List.distinct
 
                   let start =
@@ -137,7 +162,7 @@ module PropertyTests =
                       else
                           []
 
-                  let matrix = SparseMatrix(resultList, size)
+                  let matrix = SparseMatrix(resultList, size, size)
 
                   let Result1 =
                       Bfs
@@ -147,52 +172,68 @@ module PropertyTests =
                            else
                                [])
 
-                  let arr = Array2D.create size size Option.None
+                  let iSize =
+                      try
+                          Convert.ToInt32(size)
+                      with
+                      | :? OverflowException -> failwith $"%A{size} is outside the range of the Int32 type."
+
+                  let arr = Array2D.create iSize iSize Option.None
 
                   for i in resultList do
                       let x = First i
                       let y = Second i
-                      arr[x, y] <- Third i
 
-                  let NaiveBFS (start: int list) (arr: 'a option [,]) =
-                      let queue = start |> List.map (fun x -> (x, 0))
+                      let iCoord =
+                          try
+                              Convert.ToInt32(x), Convert.ToInt32(y)
+                          with
+                          | :? OverflowException -> failwith $"%A{(x, y)} is outside the range of the Int32 type."
 
-                      let QueueFormatter queue apex iter =
-                          let rec Helper list counter =
-                              if counter < 0 then
-                                  list
+                      arr[fst iCoord, snd iCoord] <- Third i
+
+                  let NaiveBFS start (arr: 'a option [,]) =
+                      let queue = Queue<uint * uint>()
+
+                      for i in start do
+                          queue.Enqueue(i, 0u)
+
+                      let rec Helper result visited =
+                          if queue.Count = 0 then
+                              result
+                          else
+                              let x = queue.Dequeue()
+
+                              if Set.contains (fst x) visited then
+                                  Helper result visited
                               else
-                                  let value = arr[apex, counter]
+                                  let iApex =
+                                      try
+                                          Convert.ToInt32(fst x)
+                                      with
+                                      | :? OverflowException ->
+                                          failwith $"%A{fst x} is outside the range of the Int32 type."
 
-                                  if value = Option.None then
-                                      Helper list (counter - 1)
-                                  else
-                                      Helper(list @ [ counter, iter ]) (counter - 1)
+                                  for i in 0 .. Array2D.length2 arr - 1 do
+                                      let value = arr[iApex, i]
 
-                          Helper queue (Array2D.length2 arr - 1)
+                                      if value = Option.None then
+                                          ()
+                                      else
+                                          queue.Enqueue(uint i, snd x + 1u)
 
-                      let rec Helper queue result visited =
-                          match queue with
-                          | [] -> result
-                          | (apex, iter) :: tl ->
-                              if List.contains apex visited then
-                                  Helper tl result visited
-                              else
-                                  let visited = apex :: visited
-                                  let newQ = QueueFormatter tl apex (iter + 1)
-                                  Helper newQ (result @ [ (apex, iter) ]) visited
+                                  Helper(result @ [ x ]) (visited.Add(fst x))
 
-                      if queue.IsEmpty then
+                      if queue.Count = 0 then
                           []
                       else
-                          Helper queue [] []
+                          Helper [] Set.empty
 
                   let list = NaiveBFS start arr
-
-                  let answers = Array.create size Option.None
+                  let answers = Array.create (int size) Option.None
 
                   for i in 0 .. list.Length - 1 do
-                      answers[fst list[i]] <- Some(snd list[i])
+                      answers[int (fst list[i])] <- Some(snd list[i])
 
                   let Result2 = SparseVector(answers)
 

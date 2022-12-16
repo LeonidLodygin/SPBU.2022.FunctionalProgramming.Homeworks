@@ -30,20 +30,14 @@ let SuperSum iter value1 value2 =
     | Some _, Option.None -> Some iter
     | _ -> failwith $"Something wrong with SuperSum"
 
-let Bfs (graph: SparseMatrix<'value>) (apexes: List<int>) =
-    let front =
-        SparseVector(
-            Array.init graph.Columns (fun x ->
-                if List.contains x apexes then
-                    Some true
-                else
-                    Option.None)
-        )
+let Bfs (graph: SparseMatrix<'value>) (apexes: List<uint>) =
+    let apexes = List.map (fun x -> (x, ())) apexes
+    let front = SparseVector(apexes, graph.Columns)
 
     let visited =
-        FAddVector(SuperSum 0) front (SparseVector(Array.create front.Length Option.None))
+        FAddVector(SuperSum 0u) front (SparseVector(Array.create (int front.Length) Option.None))
 
-    let rec Helper (front: SparseVector<'a>) visited (iter: int) =
+    let rec Helper (front: SparseVector<'a>) visited iter =
         if front.isEmpty then
             visited
         else
@@ -51,6 +45,6 @@ let Bfs (graph: SparseMatrix<'value>) (apexes: List<int>) =
                 FAddVector Mask (MultiplyVecMat front graph FrontAdd FrontMult) visited
 
             let visited = FAddVector(SuperSum iter) newFront visited
-            Helper newFront visited (iter + 1)
+            Helper newFront visited (iter + 1u)
 
-    Helper front visited 1
+    Helper front visited 1u
