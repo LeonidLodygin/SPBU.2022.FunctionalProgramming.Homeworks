@@ -35,7 +35,7 @@ let Bfs (graph: SparseMatrix<'value>) (apexes: List<uint>) =
     let front = SparseVector(apexes, graph.Columns)
 
     let visited =
-        FAddVector(SuperSum 0u) front (SparseVector(Array.create (int front.Length) Option.None))
+        FAddVector(SuperSum 0u) front (SparseVector(BinaryTree.None, graph.Columns))
 
     let rec Helper (front: SparseVector<'a>) visited iter =
         if front.isEmpty then
