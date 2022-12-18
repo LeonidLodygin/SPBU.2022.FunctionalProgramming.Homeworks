@@ -7,9 +7,9 @@ let First (x, _, _) = x
 let Second (_, x, _) = x
 let Third (_, _, x) = x
 
-type Vector<'value> =
+type Vector<'Value> =
     struct
-        val Memory: array<'value option>
+        val Memory: array<'Value option>
         val Head: uint
         val Length: uint
 
@@ -19,9 +19,9 @@ type Vector<'value> =
               Length = length }
     end
 
-type BinaryTree<'value> =
-    | Node of BinaryTree<'value> * BinaryTree<'value>
-    | Leaf of 'value
+type BinaryTree<'Value> =
+    | Node of BinaryTree<'Value> * BinaryTree<'Value>
+    | Leaf of 'Value
     | None
 
 let ClosestDegreeOf2 (columns: uint) (lines: uint) =
@@ -30,20 +30,20 @@ let ClosestDegreeOf2 (columns: uint) (lines: uint) =
         ** Math.Ceiling(Math.Log(float (max columns lines), 2.0))
     )
 
-let Separator (vec: Vector<'value>) =
+let Separator (vec: Vector<'Value>) =
     Vector(vec.Memory, vec.Head, vec.Length / 2u), Vector(vec.Memory, vec.Head + vec.Length / 2u, vec.Length / 2u)
 
-let NoneDestroyer (tree: BinaryTree<'value>) =
+let NoneDestroyer (tree: BinaryTree<'Value>) =
     match tree with
     | Leaf value -> Leaf value
     | Node (None, None) -> None
     | _ -> tree
 
-let Transformer (arr: array<'value option>) =
+let Transformer (arr: array<'Value option>) =
     let virtualLength = ClosestDegreeOf2(uint arr.Length) 0u
     let virtualVec = Vector(arr, 0u, virtualLength)
 
-    let rec helper (virtualVec: Vector<'value>) =
+    let rec helper (virtualVec: Vector<'Value>) =
         if virtualVec.Head >= uint arr.Length then
             None
         elif virtualVec.Length = 1u then
@@ -67,7 +67,7 @@ let Transformer (arr: array<'value option>) =
     else
         helper virtualVec
 
-let ListVecSeparator (list: List<uint * 'a>) size =
+let ListVecSeparator (list: List<uint * 'A>) size =
     let rec helper list leftList rightList =
         match list with
         | [] -> leftList, rightList
@@ -79,7 +79,7 @@ let ListVecSeparator (list: List<uint * 'a>) size =
 
     helper list [] []
 
-let VecFromList (list: List<uint * 'a>) size =
+let VecFromList (list: List<uint * 'A>) size =
     let virtualLength = ClosestDegreeOf2 size 0u
 
     let rec helper list virtualLength =
@@ -100,8 +100,8 @@ let VecFromList (list: List<uint * 'a>) size =
 
     helper list virtualLength
 
-type SparseVector<'value when 'value: equality> =
-    val Memory: BinaryTree<'value>
+type SparseVector<'Value when 'Value: equality> =
+    val Memory: BinaryTree<'Value>
     val Length: uint
 
     new(arr) =
@@ -121,19 +121,19 @@ type SparseVector<'value when 'value: equality> =
             else
                 let virtualLength = ClosestDegreeOf2 this.Length 0u
 
-                let rec GetElementByIndex tree length index =
+                let rec getElementByIndex tree length index =
                     match tree with
                     | None -> Option.None
                     | Leaf value -> Some value
                     | Node (left, right) ->
                         if index < length / 2u then
-                            GetElementByIndex left (length / 2u) index
+                            getElementByIndex left (length / 2u) index
                         else
-                            GetElementByIndex right (length / 2u) (index - length / 2u)
+                            getElementByIndex right (length / 2u) (index - length / 2u)
 
-                GetElementByIndex this.Memory virtualLength i
+                getElementByIndex this.Memory virtualLength i
 
-    member this.isEmpty =
+    member this.IsEmpty =
         match this.Memory with
         | BinaryTree.None -> true
         | _ -> false
@@ -144,28 +144,28 @@ let NoneOrValue x =
     | Some value -> Leaf value
 
 let FAddVector
-    (func: 'a option -> 'b option -> 'c option)
-    (vec1: SparseVector<'a>)
-    (vec2: SparseVector<'b>)
-    : SparseVector<'c> =
-    let rec Helper (tree1: BinaryTree<'a>) (tree2: BinaryTree<'b>) : BinaryTree<'c> =
+    (func: 'A option -> 'B option -> 'C option)
+    (vec1: SparseVector<'A>)
+    (vec2: SparseVector<'B>)
+    : SparseVector<'C> =
+    let rec helper (tree1: BinaryTree<'A>) (tree2: BinaryTree<'B>) : BinaryTree<'C> =
         match tree1, tree2 with
         | None, None -> BinaryTree.None
         | Leaf value1, Leaf value2 -> func (Some value1) (Some value2) |> NoneOrValue
         | None, Leaf value -> func Option.None (Some value) |> NoneOrValue
         | Leaf value, None -> func (Some value) Option.None |> NoneOrValue
         | None, Node (left, right) ->
-            Node(Helper None left, Helper None right)
+            Node(helper None left, helper None right)
             |> NoneDestroyer
         | Node (left, right), None ->
-            Node(Helper left None, Helper right None)
+            Node(helper left None, helper right None)
             |> NoneDestroyer
         | Node (left, right), Node (left2, right2) ->
-            Node(Helper left left2, Helper right right2)
+            Node(helper left left2, helper right right2)
             |> NoneDestroyer
         | _, _ -> failwith $"Something going wrong"
 
     if vec1.Length <> vec2.Length then
         failwith $"Different values of first vector length and second vector length"
     else
-        SparseVector(Helper vec1.Memory vec2.Memory, vec1.Length)
+        SparseVector(helper vec1.Memory vec2.Memory, vec1.Length)

@@ -22,7 +22,7 @@ let SimplePow (n: float) a =
 let rec FastPow (n: float) (a: int) =
     // Checking the base and exponent. We don't want to multiply 0 or 1 by itself.
     if n = 0.0 && a = 0 then
-        failwith "0 to the power of 0 is uncertainty"
+        failwith "0 to the power of 0 is uncertainty!"
     elif n = 0.0 then
         0.0
     elif n = 1 then
@@ -40,7 +40,7 @@ let rec FastPow (n: float) (a: int) =
 
 
 // The difference between the maximum and minimum elements in the array
-let inline MinMaxFromArray (x: 'value []) =
+let inline MinMaxFromArray (x: 'Value []) =
     if x.Length = 0 then
         failwith "Array is empty"
     else
