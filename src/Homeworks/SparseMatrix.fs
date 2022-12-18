@@ -3,9 +3,9 @@
 open SparseVector
 open System
 
-type Matrix<'value> =
+type Matrix<'Value> =
     struct
-        val Memory: 'value option [,]
+        val Memory: 'Value option [,]
         val CoordinatesOfHead: uint * uint
         val Columns: uint
         val Lines: uint
@@ -18,12 +18,12 @@ type Matrix<'value> =
     end
 
 /// Quadrants: Fst:NW, Snd:NE, Thd:SW, Fth:SE.
-type QuadTree<'value> =
-    | Node of Fst: QuadTree<'value> * Snd: QuadTree<'value> * Thd: QuadTree<'value> * Fth: QuadTree<'value>
-    | Leaf of 'value
+type QuadTree<'Value> =
+    | Node of Fst: QuadTree<'Value> * Snd: QuadTree<'Value> * Thd: QuadTree<'Value> * Fth: QuadTree<'Value>
+    | Leaf of 'Value
     | None
 
-let Separator (matrix: Matrix<'value>) =
+let Separator (matrix: Matrix<'Value>) =
     Matrix(matrix.Memory, matrix.CoordinatesOfHead, matrix.Columns / 2u, matrix.Lines / 2u),
     Matrix(
         matrix.Memory,
@@ -44,33 +44,33 @@ let Separator (matrix: Matrix<'value>) =
         matrix.Lines / 2u
     )
 
-let NoneDestroyer (tree: QuadTree<'value>) =
+let NoneDestroyer (tree: QuadTree<'Value>) =
     match tree with
     | Leaf value -> Leaf value
     | Node (None, None, None, None) -> None
     | _ -> tree
 
 let ListMatrixSeparator list (size: uint) =
-    let rec Helper list NW NE SW SE =
+    let rec helper list nW nE sW sE =
         match list with
-        | [] -> NW, NE, SW, SE
+        | [] -> nW, nE, sW, sE
         | (x, y, value) :: tl ->
             if x < size / 2u then
                 if y < size / 2u then
-                    Helper tl ((x, y, value) :: NW) NE SW SE
+                    helper tl ((x, y, value) :: nW) nE sW sE
                 else
-                    Helper tl NW ((x, y - size / 2u, value) :: NE) SW SE
+                    helper tl nW ((x, y - size / 2u, value) :: nE) sW sE
             else if y < size / 2u then
-                Helper tl NW NE ((x - size / 2u, y, value) :: SW) SE
+                helper tl nW nE ((x - size / 2u, y, value) :: sW) sE
             else
-                Helper tl NW NE SW ((x - size / 2u, y - size / 2u, value) :: SE)
+                helper tl nW nE sW ((x - size / 2u, y - size / 2u, value) :: sE)
 
-    Helper list [] [] [] []
+    helper list [] [] [] []
 
 let MatrixFromList list size =
     let virtualLength = ClosestDegreeOf2 size 0u
 
-    let rec Helper list length =
+    let rec helper list length =
         if length = 0u then
             QuadTree.None
         elif length = 1u
@@ -82,25 +82,25 @@ let MatrixFromList list size =
                  || (First list.Head > size || Second list.Head > size)) then
             QuadTree.None
         else
-            let NW, NE, SW, SE = ListMatrixSeparator list length
+            let nW, nE, sW, sE = ListMatrixSeparator list length
 
             QuadTree.Node(
-                Helper NW (length / 2u),
-                Helper NE (length / 2u),
-                Helper SW (length / 2u),
-                Helper SE (length / 2u)
+                helper nW (length / 2u),
+                helper nE (length / 2u),
+                helper sW (length / 2u),
+                helper sE (length / 2u)
             )
             |> NoneDestroyer
 
-    Helper list virtualLength
+    helper list virtualLength
 
-let Transformer (arr: 'value option [,]) =
+let Transformer (arr: 'Value option [,]) =
     let virtualLength =
         ClosestDegreeOf2(uint (Array2D.length1 arr)) (uint (Array2D.length2 arr))
 
     let virtualMatrix = Matrix(arr, (0u, 0u), virtualLength, virtualLength)
 
-    let rec helper (virtualMatrix: Matrix<'value>) =
+    let rec helper (virtualMatrix: Matrix<'Value>) =
         if fst virtualMatrix.CoordinatesOfHead
            >= uint (Array2D.length2 arr)
            || snd virtualMatrix.CoordinatesOfHead
@@ -131,8 +131,8 @@ let Transformer (arr: 'value option [,]) =
     else
         helper virtualMatrix
 
-type SparseMatrix<'value when 'value: equality> =
-    val Memory: QuadTree<'value>
+type SparseMatrix<'Value when 'Value: equality> =
+    val Memory: QuadTree<'Value>
     val Lines: uint
     val Columns: uint
 
@@ -158,19 +158,19 @@ type SparseMatrix<'value when 'value: equality> =
             else
                 let virtualLength = ClosestDegreeOf2 this.Lines this.Columns
 
-                let rec GetElementByIndex tree columns lines x y =
+                let rec getElementByIndex tree columns lines x y =
                     match tree with
                     | None -> Option.None
                     | Leaf value -> Some value
                     | Node (fst, snd, thd, fth) ->
                         if x < columns / 2u then
                             if y < lines / 2u then
-                                GetElementByIndex fst (columns / 2u) (lines / 2u) x y
+                                getElementByIndex fst (columns / 2u) (lines / 2u) x y
                             else
-                                GetElementByIndex thd (columns / 2u) (lines / 2u) x (y - lines / 2u)
+                                getElementByIndex thd (columns / 2u) (lines / 2u) x (y - lines / 2u)
                         else if y < lines / 2u then
-                            GetElementByIndex snd (columns / 2u) (lines / 2u) (x - columns / 2u) y
+                            getElementByIndex snd (columns / 2u) (lines / 2u) (x - columns / 2u) y
                         else
-                            GetElementByIndex fth (columns / 2u) (lines / 2u) (x - columns / 2u) (y - lines / 2u)
+                            getElementByIndex fth (columns / 2u) (lines / 2u) (x - columns / 2u) (y - lines / 2u)
 
-                GetElementByIndex this.Memory virtualLength virtualLength x y
+                getElementByIndex this.Memory virtualLength virtualLength x y

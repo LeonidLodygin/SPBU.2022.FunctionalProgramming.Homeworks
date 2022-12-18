@@ -49,6 +49,13 @@ let testsCodeGlob =
 let srcGlob = src @@ "**/*.??proj"
 let testsGlob = __SOURCE_DIRECTORY__ </> ".." </> "tests/**/*.??proj"
 
+let lintGlob = !! (src @@ "**/*.??proj")
+
+let testsLintGlob =
+    !! (__SOURCE_DIRECTORY__
+    </> ".."
+    </> "tests/**/*.??proj")
+
 let mainApp = src @@ productName
 
 let srcAndTest =
@@ -215,6 +222,8 @@ module dotnet =
 
     let fantomas args =
         DotNet.exec id "fantomas" args
+
+    let fsharpLint args = DotNet.exec id "fsharplint lint --file-type project" args
 
 module FSharpAnalyzers =
     type Arguments =
@@ -577,6 +586,14 @@ let checkFormatCode _ =
     else
         Trace.logf "Errors while formatting: %A" result.Errors
 
+let fsharpLint _ =
+    let result = [lintGlob] |> Seq.collect id |> String.concat "" |> dotnet.fsharpLint
+    let resultTests = [testsLintGlob] |> Seq.collect id |> String.concat "" |> dotnet.fsharpLint
+    if result.OK && resultTests.OK then
+        Trace.log "No files need formatting"
+    else
+        failwith "Some files need formatting, check output for more info"
+
 let initTargets () =
     BuildServer.install [
         GitHubActions.Installer
@@ -612,6 +629,7 @@ let initTargets () =
     Target.create "FormatCode" formatCode
     Target.create "CheckFormatCode" checkFormatCode
     Target.create "Release" ignore
+    Target.create "FsharpLint" fsharpLint
 
     //-----------------------------------------------------------------------------
     // Target Dependencies
@@ -636,6 +654,7 @@ let initTargets () =
 
     "DotnetRestore"
         ==> "CheckFormatCode"
+        ==> "FsharpLint"
         ==> "DotnetBuild"
         // ==> "FSharpAnalyzers"
         ==> "DotnetTest"

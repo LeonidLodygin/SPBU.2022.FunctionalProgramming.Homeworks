@@ -17,21 +17,21 @@ let rec CutSomeTree tree diff =
     | _ -> tree
 
 let MultiplyVecMat
-    (vector: SparseVector<'a>)
-    (matrix: SparseMatrix<'b>)
-    (fAdd: 'c option -> 'c option -> 'c option)
-    (fMult: 'a option -> 'b option -> 'c option)
+    (vector: SparseVector<'A>)
+    (matrix: SparseMatrix<'B>)
+    (fAdd: 'C option -> 'C option -> 'C option)
+    (fMult: 'A option -> 'B option -> 'C option)
     =
-    let rec Helper (vectorTree: BinaryTree<'a>) (matrixTree: QuadTree<'b>) : BinaryTree<'c> =
+    let rec helper (vectorTree: BinaryTree<'A>) (matrixTree: QuadTree<'B>) : BinaryTree<'C> =
         match vectorTree, matrixTree with
         | BinaryTree.None, _ -> BinaryTree.None
         | _, QuadTree.None -> BinaryTree.None
         | BinaryTree.Leaf value, QuadTree.Leaf value1 -> fMult (Some value) (Some value1) |> NoneOrValue
         | Node (left, right), QuadTree.Node (first, second, third, fourth) ->
-            let vec1 = SparseVector(Helper left first, matrix.Columns)
-            let vec2 = SparseVector(Helper right third, matrix.Columns)
-            let vec3 = SparseVector(Helper left second, matrix.Columns)
-            let vec4 = SparseVector(Helper right fourth, matrix.Columns)
+            let vec1 = SparseVector(helper left first, matrix.Columns)
+            let vec2 = SparseVector(helper right third, matrix.Columns)
+            let vec3 = SparseVector(helper left second, matrix.Columns)
+            let vec4 = SparseVector(helper right fourth, matrix.Columns)
 
             Node((FAddVector fAdd vec1 vec2).Memory, (FAddVector fAdd vec3 vec4).Memory)
             |> NoneDestroyer
@@ -52,7 +52,7 @@ let MultiplyVecMat
             - int (Math.Ceiling(Math.Log(float matrix.Columns, 2.0)))
 
         if vectorDegree = matrixDegree then
-            SparseVector((CutSomeTree(Helper vector.Memory matrix.Memory) diffToCut), vector.Length)
+            SparseVector((CutSomeTree(helper vector.Memory matrix.Memory) diffToCut), vector.Length)
         else
             let tree = GrowSomeTree vector.Memory diffToGrow
-            SparseVector(CutSomeTree(Helper tree matrix.Memory) diffToCut, matrix.Columns)
+            SparseVector(CutSomeTree(helper tree matrix.Memory) diffToCut, matrix.Columns)

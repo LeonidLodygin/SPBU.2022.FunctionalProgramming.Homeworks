@@ -1,36 +1,36 @@
 ﻿module MyListHomework
 
 // Type MyList: BubbleSort, QuickSort, Concatenation of two lists.
-type MyList<'value> =
-    | Cons of head: 'value * tail: MyList<'value>
+type MyList<'Value> =
+    | Cons of head: 'Value * tail: MyList<'Value>
     | Empty
 
-let rec Length (lst: MyList<'value>) =
+let rec Length (lst: MyList<'Value>) =
     match lst with
     | Empty -> 0
     | Cons (hd, tl) -> 1 + (Length tl)
 
 /// The function receives two lists of type MyList as input and returns their union. (The second list is appended to the end of the first)
-let rec Concatenation (lst1: MyList<'value>) (lst2: MyList<'value>) =
+let rec Concatenation (lst1: MyList<'Value>) (lst2: MyList<'Value>) =
     match lst1 with
     | Empty -> lst2
     | Cons (hd, tl) -> Cons(hd, Concatenation tl lst2)
 
 /// The function receives a list of type MyList and returns the same list of built-in type List.
-let rec MyListToList (lst: MyList<'value>) =
+let rec MyListToList (lst: MyList<'Value>) =
     match lst with
     | Empty -> []
     | Cons (hd, tl) -> hd :: (MyListToList tl)
 
 /// The function receives a list of built-in type List and returns the same list of type MyList.
-let rec ListToMyList (lst: List<'value>) =
+let rec ListToMyList (lst: List<'Value>) =
     match lst with
     | [] -> Empty
     | hd :: tl -> Cons(hd, ListToMyList tl)
 
 /// BubbleSort.(MyList type)
-let BubbleSort (lst: MyList<'value>) =
-    let rec bubble (lst: MyList<'value>) (changer: bool) (newList: MyList<'value>) =
+let BubbleSort (lst: MyList<'Value>) =
+    let rec bubble (lst: MyList<'Value>) (changer: bool) (newList: MyList<'Value>) =
         match lst, changer with
         | Empty, _ -> Empty
         | Cons (hd, Empty), false -> Concatenation newList (Cons(hd, Empty))
@@ -44,7 +44,7 @@ let BubbleSort (lst: MyList<'value>) =
     bubble lst false Empty
 
 /// The function receives a list of type MyList, a value. Returns a cortege with two lists of elements less or greater than the given value.
-let rec MinMaxList (lst: MyList<'value>) selected =
+let rec MinMaxList (lst: MyList<'Value>) selected =
     match lst with
     | Empty -> Empty, Empty
     | Cons (hd, tl) ->
@@ -57,8 +57,8 @@ let rec MinMaxList (lst: MyList<'value>) selected =
 
 
 /// QuickSort.(MyList type)
-let QuickSort (lst: MyList<'value>) =
-    let rec sort (lst: MyList<'value>) =
+let QuickSort (lst: MyList<'Value>) =
+    let rec sort (lst: MyList<'Value>) =
         match lst with
         | Empty -> Empty
         | Cons (hd, Empty) -> Cons(hd, Empty)
