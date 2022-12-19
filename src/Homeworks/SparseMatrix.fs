@@ -17,7 +17,7 @@ type Matrix<'Value> =
               Lines = lines }
     end
 
-/// Quadrants: Fst:NW, Snd:NE, Thd:SW, Fth:SE.
+/// Quadrants: Fst:nw, Snd:ne, Thd:sw, Fth:se.
 type QuadTree<'Value> =
     | Node of Fst: QuadTree<'Value> * Snd: QuadTree<'Value> * Thd: QuadTree<'Value> * Fth: QuadTree<'Value>
     | Leaf of 'Value
@@ -51,19 +51,19 @@ let NoneDestroyer (tree: QuadTree<'Value>) =
     | _ -> tree
 
 let ListMatrixSeparator list (size: uint) =
-    let rec helper list nW nE sW sE =
+    let rec helper list nw ne sw se =
         match list with
-        | [] -> nW, nE, sW, sE
+        | [] -> nw, ne, sw, se
         | (x, y, value) :: tl ->
             if x < size / 2u then
                 if y < size / 2u then
-                    helper tl ((x, y, value) :: nW) nE sW sE
+                    helper tl ((x, y, value) :: nw) ne sw se
                 else
-                    helper tl nW ((x, y - size / 2u, value) :: nE) sW sE
+                    helper tl nw ((x, y - size / 2u, value) :: ne) sw se
             else if y < size / 2u then
-                helper tl nW nE ((x - size / 2u, y, value) :: sW) sE
+                helper tl nw ne ((x - size / 2u, y, value) :: sw) se
             else
-                helper tl nW nE sW ((x - size / 2u, y - size / 2u, value) :: sE)
+                helper tl nw ne sw ((x - size / 2u, y - size / 2u, value) :: se)
 
     helper list [] [] [] []
 
@@ -82,13 +82,13 @@ let MatrixFromList list size =
                  || (First list.Head > size || Second list.Head > size)) then
             QuadTree.None
         else
-            let nW, nE, sW, sE = ListMatrixSeparator list length
+            let nw, ne, sw, se = ListMatrixSeparator list length
 
             QuadTree.Node(
-                helper nW (length / 2u),
-                helper nE (length / 2u),
-                helper sW (length / 2u),
-                helper sE (length / 2u)
+                helper nw (length / 2u),
+                helper ne (length / 2u),
+                helper sw (length / 2u),
+                helper se (length / 2u)
             )
             |> NoneDestroyer
 
