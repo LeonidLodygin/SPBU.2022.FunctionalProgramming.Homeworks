@@ -12,11 +12,11 @@ module TreeTests =
             "samples"
             [ testCase "Number of different values in tree with 1 node"
               <| fun _ ->
-                  let Result = NumOfDifferentValues(Leaf(134))
-                  Expect.equal Result 1 "Tree with 1 node has 1 value"
+                  let result = NumOfDifferentValues(Leaf(134))
+                  Expect.equal result 1 "Tree with 1 node has 1 value"
               testCase "Number of different values in tree with the same values"
               <| fun _ ->
-                  let Result =
+                  let result =
                       NumOfDifferentValues(
                           Node(
                               "ha",
@@ -27,10 +27,10 @@ module TreeTests =
                           )
                       )
 
-                  Expect.equal Result 1 "Tree with the same values has only 1 value"
+                  Expect.equal result 1 "Tree with the same values has only 1 value"
               testCase "Number of different values in tree with int values"
               <| fun _ ->
-                  let Result =
+                  let result =
                       NumOfDifferentValues(
                           Node(
                               12,
@@ -42,12 +42,12 @@ module TreeTests =
                       )
 
                   Expect.equal
-                      Result
+                      result
                       6
                       "Tree: Node(12, [|Node(1, [|Leaf(12)|]); Node(3, [|Leaf(12)|]); Node(10, [|Node(4, [|Leaf(12)|])|]); Node(15, [|Leaf(12);Leaf(1)|])|]) has 6 different values"
               testCase "Number of different values in tree with string values"
               <| fun _ ->
-                  let Result =
+                  let result =
                       NumOfDifferentValues(
                           Node(
                               "12",
@@ -59,7 +59,7 @@ module TreeTests =
                       )
 
                   Expect.equal
-                      Result
+                      result
                       6
                       "Tree: Node(\"12\", [|Node(\"1\", [|Leaf(\"12\")|]); Node(\"3\", [|Leaf(\"12\")|]); Node(\"10\", [|Node(\"4\", [|Leaf(\"12\")|])|]); Node(\"15\", [|Leaf(\"12\");Leaf(\"1\")|])|]) has 6 different values"
               testCase "MyList of tree with 1 node"
@@ -70,7 +70,7 @@ module TreeTests =
                   <| "MyList of tree with 1 node should be Cons(value, Empty)"
               testCase "MyList of some tree"
               <| fun _ ->
-                  let Result =
+                  let result =
                       MyListOfTree(
                           Node(
                               12,
@@ -82,7 +82,7 @@ module TreeTests =
                       )
 
                   Expect.equal
-                      Result
+                      result
                       (Cons(
                           1,
                           Cons(
