@@ -49,13 +49,6 @@ let testsCodeGlob =
 let srcGlob = src @@ "**/*.??proj"
 let testsGlob = __SOURCE_DIRECTORY__ </> ".." </> "tests/**/*.??proj"
 
-let lintGlob = !! (src @@ "**/*.??proj")
-
-let testsLintGlob =
-    !! (__SOURCE_DIRECTORY__
-    </> ".."
-    </> "tests/**/*.??proj")
-
 let mainApp = src @@ productName
 
 let srcAndTest =
@@ -223,7 +216,7 @@ module dotnet =
     let fantomas args =
         DotNet.exec id "fantomas" args
 
-    let fsharpLint args = DotNet.exec id "fsharplint lint --file-type project" args
+    let fsharpLint args = DotNet.exec id "fsharplint lint --file-type solution" args
 
 module FSharpAnalyzers =
     type Arguments =
