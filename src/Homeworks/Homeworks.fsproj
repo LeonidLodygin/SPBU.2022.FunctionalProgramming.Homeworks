@@ -24,6 +24,7 @@
         <Compile Include="SparseMatrix.fs" />
         <Compile Include="MultiMatrix.fs" />
         <Compile Include="BreadthFirstSearch.fs" />
+        <Compile Include="GraphBuild.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
