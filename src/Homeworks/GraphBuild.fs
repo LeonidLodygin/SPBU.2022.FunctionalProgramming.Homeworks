@@ -23,7 +23,7 @@ type ReadFile<'Value when 'Value: equality>=
     end
 
 let parser (dataType:Type) (data:string) =
-    Convert.ChangeType(data, dataType)
+    Convert.ChangeType(data, dataType, System.Globalization.CultureInfo.InvariantCulture.NumberFormat)
 
 let MatrixReader (path: string) =
     if not (File.Exists(path)) || FileInfo(path).Extension <> ".mtx" then
@@ -51,15 +51,9 @@ let MatrixReader (path: string) =
         | s when Seq.isEmpty s -> list
         | _ ->
             let coordinates = splitter (Seq.head lines)
-            let (number:string) =
-                if numericData.Equals("real") && coordinates[2].Contains "." then
-                    let x = coordinates[2].Split '.'
-                    x[0] + "," + x[1]
-                else
-                    coordinates[3]
-            let weight = Some(parser dataType number)
+            let weight = Some(parser dataType coordinates[2])
             let triple = ((UInt32.Parse coordinates[0]) - 1u, (UInt32.Parse coordinates[1]) - 1u, weight)
-            if matrixType = "symmetric" && coordinates[0] <> coordinates[1] then
+            if matrixType.Equals("symmetric") && coordinates[0] <> coordinates[1] then
                 let secondTriple = ((UInt32.Parse coordinates[1]) - 1u, (UInt32.Parse coordinates[0]) - 1u, weight)
                 helper (triple::secondTriple::list) (Seq.skip 1 lines)
             else
