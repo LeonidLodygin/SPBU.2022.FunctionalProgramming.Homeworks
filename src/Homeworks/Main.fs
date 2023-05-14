@@ -1,7 +1,5 @@
 namespace Homeworks
 
-open GraphBuild
-
 module Main =
 
     [<EntryPoint>]
