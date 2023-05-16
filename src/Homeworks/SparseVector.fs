@@ -143,29 +143,39 @@ let NoneOrValue x =
     | Option.None -> None
     | Some value -> Leaf value
 
-let FAddVector
+
+let ParallelFAddVector
     (func: 'A option -> 'B option -> 'C option)
     (vec1: SparseVector<'A>)
     (vec2: SparseVector<'B>)
+    parallelLevel
     : SparseVector<'C> =
-    let rec helper (tree1: BinaryTree<'A>) (tree2: BinaryTree<'B>) : BinaryTree<'C> =
+    let rec helper (tree1: BinaryTree<'A>) (tree2: BinaryTree<'B>) level : BinaryTree<'C> =
         match tree1, tree2 with
         | None, None -> BinaryTree.None
         | Leaf value1, Leaf value2 -> func (Some value1) (Some value2) |> NoneOrValue
         | None, Leaf value -> func Option.None (Some value) |> NoneOrValue
         | Leaf value, None -> func (Some value) Option.None |> NoneOrValue
         | None, Node (left, right) ->
-            Node(helper None left, helper None right)
+            Node(helper None left level, helper None right level)
             |> NoneDestroyer
         | Node (left, right), None ->
-            Node(helper left None, helper right None)
+            Node(helper left None level, helper right None level)
             |> NoneDestroyer
         | Node (left, right), Node (left2, right2) ->
-            Node(helper left left2, helper right right2)
-            |> NoneDestroyer
+            if level = 0 then
+                Node(helper left left2 level, helper right right2 level)
+                |> NoneDestroyer
+            else
+                let tasks =
+                    [| async { return helper left left2 (level - 1) }
+                       async { return helper right right2 (level - 1) } |]
+
+                let results = tasks |> Async.Parallel |> Async.RunSynchronously
+                Node(results[0], results[1]) |> NoneDestroyer
         | _, _ -> failwith $"Something going wrong"
 
     if vec1.Length <> vec2.Length then
         failwith $"Different values of first vector length and second vector length"
     else
-        SparseVector(helper vec1.Memory vec2.Memory, vec1.Length)
+        SparseVector(helper vec1.Memory vec2.Memory parallelLevel, vec1.Length)
