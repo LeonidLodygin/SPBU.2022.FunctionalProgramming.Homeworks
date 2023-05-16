@@ -13,7 +13,7 @@ type BfsBenchmark() =
     let mutable matrix = SparseMatrix(array2D [| [||] |])
     let mutable graph = Graph(matrix, 0u, 0u)
 
-    let GeneratorOfMatrix (length: int) (density: int) =
+    let generatorOfMatrix (length: int) (density: int) =
         let arr2D = Array2D.init (abs length) (abs length) (fun _ _ -> Option.None)
         let mutable totalElements = length * length * density / 100
 
@@ -42,7 +42,7 @@ type BfsBenchmark() =
 
     [<GlobalSetup>]
     member this.Graph() =
-        matrix <- GeneratorOfMatrix this.vertices this.density
+        matrix <- generatorOfMatrix this.vertices this.density
         graph <- Graph(matrix, uint this.vertices, uint (this.density * this.vertices / 100))
 
     [<Benchmark(Baseline = true)>]
