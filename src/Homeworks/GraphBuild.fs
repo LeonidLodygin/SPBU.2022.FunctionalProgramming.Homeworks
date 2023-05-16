@@ -20,16 +20,18 @@ type ReadFile<'Value when 'Value: equality> =
     struct
         val NumericData: string
         val MatrixType: string
-        val Vertices: uint
+        val Rows: uint
+        val Columns: uint
         val Entries: uint
-        val SparseMatrix: SparseMatrix<'Value>
+        val List: List<uint*uint*'Value>
 
-        new(numData, mType, vertices, entries, sparseMatrix) =
+        new(numData, mType, rows, columns, entries, list) =
             { NumericData = numData
               MatrixType = mType
-              Vertices = vertices
+              Rows = rows
+              Columns = columns
               Entries = entries
-              SparseMatrix = sparseMatrix }
+              List = list }
     end
 
 let parser (dataType: Type) (data: string) =
@@ -59,7 +61,8 @@ let MatrixReader (path: string) =
     let matrixType = firstLine[4]
     let lines = Seq.skipWhile (fun (n: string) -> n[0] = '%') allLines
     let informationLine = splitter (Seq.head lines)
-    let vertices = UInt32.Parse(informationLine[0])
+    let rows = UInt32.Parse(informationLine[0])
+    let columns = UInt32.Parse(informationLine[0])
     let entries = UInt32.Parse(informationLine[2])
 
     let rec helper list (lines: seq<string>) =
@@ -84,8 +87,12 @@ let MatrixReader (path: string) =
                 helper (triple :: list) (Seq.skip 1 lines)
 
     let list = helper [] (Seq.skip 1 lines)
-    ReadFile(numericData, matrixType, vertices, entries, SparseMatrix(list, vertices, vertices))
+    ReadFile(numericData, matrixType, rows, columns, entries, list)
 
 let GraphBuilder (path: string) =
     let file = MatrixReader path
-    Graph(file.SparseMatrix, file.Vertices, file.Entries)
+    if file.Rows = file.Columns then
+        let matrix = SparseMatrix(file.List, file.Rows, file.Columns)
+        Graph(matrix, file.Rows, file.Entries)
+    else
+        failwith "To build a graph you need a square matrix"
