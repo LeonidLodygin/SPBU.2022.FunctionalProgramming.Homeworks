@@ -23,7 +23,7 @@ type ReadFile<'Value when 'Value: equality> =
         val Rows: uint
         val Columns: uint
         val Entries: uint
-        val List: List<uint*uint*'Value>
+        val List: List<uint * uint * 'Value>
 
         new(numData, mType, rows, columns, entries, list) =
             { NumericData = numData
@@ -91,6 +91,7 @@ let MatrixReader (path: string) =
 
 let GraphBuilder (path: string) =
     let file = MatrixReader path
+
     if file.Rows = file.Columns then
         let matrix = SparseMatrix(file.List, file.Rows, file.Columns)
         Graph(matrix, file.Rows, file.Entries)
