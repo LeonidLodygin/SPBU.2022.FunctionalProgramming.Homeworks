@@ -1,7 +1,7 @@
 ﻿module BreadthFirstSearch
 
 open SparseVector
-open SparseMatrix
+open GraphBuild
 open MultiMatrix
 open FSharp.Collections
 
@@ -30,21 +30,25 @@ let SuperSum iter value1 value2 =
     | Some _, Option.None -> Some iter
     | _ -> failwith $"Something wrong with SuperSum"
 
-let Bfs (graph: SparseMatrix<'Value>) (apexes: List<uint>) =
+let Bfs (graph: Graph<'Value>) (apexes: List<uint>) fAddLevel multLevel =
     let apexes = List.map (fun x -> (x, ())) apexes
-    let front = SparseVector(apexes, graph.Columns)
+    let front = SparseVector(apexes, graph.Vertices)
 
     let visited =
-        FAddVector(SuperSum 0u) front (SparseVector(BinaryTree.None, graph.Columns))
+        ParallelFAddVector(SuperSum 0u) front (SparseVector(BinaryTree.None, graph.Vertices)) fAddLevel
 
     let rec helper (front: SparseVector<'A>) visited iter =
         if front.IsEmpty then
             visited
         else
             let newFront =
-                FAddVector Mask (MultiplyVecMat front graph FrontAdd FrontMult) visited
+                ParallelFAddVector
+                    Mask
+                    (ParallelMultiplyVecMat front graph.Memory FrontAdd FrontMult multLevel)
+                    visited
+                    fAddLevel
 
-            let visited = FAddVector(SuperSum iter) newFront visited
+            let visited = ParallelFAddVector(SuperSum iter) newFront visited fAddLevel
             helper newFront visited (iter + 1u)
 
     helper front visited 1u

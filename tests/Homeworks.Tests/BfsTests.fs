@@ -5,6 +5,7 @@ open Expecto
 open SparseMatrix
 open SparseVector
 open BreadthFirstSearch
+open GraphBuild
 
 module SimpleTests =
     [<Tests>]
@@ -47,7 +48,8 @@ module SimpleTests =
                         (3u, 1u, Some 9) ]
 
                   let matrix = SparseMatrix(list, 4u, 4u)
-                  let result = Bfs matrix [ 0u ]
+                  let graph = Graph(matrix, 4u, 2u)
+                  let result = Bfs graph [ 0u ] 0 0
 
                   Expect.equal result.Memory
                   <| Node(Node(Leaf 0u, Leaf 1u), Node(None, Leaf 2u))
@@ -61,7 +63,8 @@ module SimpleTests =
                         (3u, 1u, Some 9) ]
 
                   let matrix = SparseMatrix(list, 4u, 4u)
-                  let result = Bfs matrix []
+                  let graph = Graph(matrix, 4u, 2u)
+                  let result = Bfs graph [] 0 0
 
                   Expect.equal result.Memory
                   <| None
@@ -75,7 +78,8 @@ module SimpleTests =
                         (3u, 1u, Some 9) ]
 
                   let matrix = SparseMatrix(list, 4u, 4u)
-                  let result = Bfs matrix [ 0u; 1u; 2u; 3u ]
+                  let graph = Graph(matrix, 4u, 2u)
+                  let result = Bfs graph [ 0u; 1u; 2u; 3u ] 0 0
 
                   Expect.equal result.Memory
                   <| Node(Node(Leaf 0u, Leaf 0u), Node(Leaf 0u, Leaf 0u))
@@ -84,7 +88,8 @@ module SimpleTests =
               <| fun _ ->
                   let list = []
                   let matrix = SparseMatrix(list, 0u, 0u)
-                  let result = Bfs matrix []
+                  let graph = Graph(matrix, 0u, 0u)
+                  let result = Bfs graph [] 0 0
 
                   Expect.equal result.Memory
                   <| None
@@ -166,14 +171,17 @@ module PropertyTests =
                           []
 
                   let matrix = SparseMatrix(resultList, size, size)
+                  let graph = Graph(matrix, size, uint list.Length)
 
                   let result1 =
                       Bfs
-                          matrix
+                          graph
                           (if resultList.Length <> 0 then
                                [ First resultList.Head ]
                            else
                                [])
+                          0
+                          0
 
                   let iSize =
                       try

@@ -224,14 +224,16 @@ var assemblies = [
   {
     "name": "Homeworks",
     "classes": [
-      { "name": "BreadthFirstSearch", "rp": "Homeworks_BreadthFirstSearch.html", "cl": 23, "ucl": 5, "cal": 28, "tl": 50, "ct": "LineCoverage", "mc": "-", "cb": 13, "tb": 18, "lch": [], "bch": [], "hc": [] },
+      { "name": "Benchmark", "rp": "Homeworks_Benchmark.html", "cl": 0, "ucl": 32, "cal": 32, "tl": 67, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 14, "lch": [], "bch": [], "hc": [] },
+      { "name": "BreadthFirstSearch", "rp": "Homeworks_BreadthFirstSearch.html", "cl": 27, "ucl": 5, "cal": 32, "tl": 54, "ct": "LineCoverage", "mc": "-", "cb": 13, "tb": 18, "lch": [], "bch": [], "hc": [] },
       { "name": "FirstHomework", "rp": "Homeworks_FirstHomework.html", "cl": 25, "ucl": 10, "cal": 35, "tl": 68, "ct": "LineCoverage", "mc": "-", "cb": 31, "tb": 44, "lch": [], "bch": [], "hc": [] },
-      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 6, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
+      { "name": "GraphBuild", "rp": "Homeworks_GraphBuild.html", "cl": 3, "ucl": 48, "cal": 51, "tl": 99, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 16, "lch": [], "bch": [], "hc": [] },
+      { "name": "Homeworks.Main", "rp": "Homeworks_Main.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 11, "ct": "LineCoverage", "mc": "-", "cb": 0, "tb": 0, "lch": [], "bch": [], "hc": [] },
       { "name": "IListHomework", "rp": "Homeworks_IListHomework.html", "cl": 45, "ucl": 7, "cal": 52, "tl": 107, "ct": "LineCoverage", "mc": "-", "cb": 35, "tb": 42, "lch": [], "bch": [], "hc": [] },
-      { "name": "MultiMatrix", "rp": "Homeworks_MultiMatrix.html", "cl": 28, "ucl": 2, "cal": 30, "tl": 58, "ct": "LineCoverage", "mc": "-", "cb": 17, "tb": 20, "lch": [], "bch": [], "hc": [] },
+      { "name": "MultiMatrix", "rp": "Homeworks_MultiMatrix.html", "cl": 29, "ucl": 15, "cal": 44, "tl": 76, "ct": "LineCoverage", "mc": "-", "cb": 18, "tb": 22, "lch": [], "bch": [], "hc": [] },
       { "name": "MyListHomework", "rp": "Homeworks_MyListHomework.html", "cl": 32, "ucl": 0, "cal": 32, "tl": 69, "ct": "LineCoverage", "mc": "-", "cb": 24, "tb": 24, "lch": [], "bch": [], "hc": [] },
       { "name": "SparseMatrix", "rp": "Homeworks_SparseMatrix.html", "cl": 97, "ucl": 8, "cal": 105, "tl": 176, "ct": "LineCoverage", "mc": "-", "cb": 57, "tb": 68, "lch": [], "bch": [], "hc": [] },
-      { "name": "SparseVector", "rp": "Homeworks_SparseVector.html", "cl": 83, "ucl": 6, "cal": 89, "tl": 171, "ct": "LineCoverage", "mc": "-", "cb": 50, "tb": 60, "lch": [], "bch": [], "hc": [] },
+      { "name": "SparseVector", "rp": "Homeworks_SparseVector.html", "cl": 84, "ucl": 11, "cal": 95, "tl": 181, "ct": "LineCoverage", "mc": "-", "cb": 51, "tb": 62, "lch": [], "bch": [], "hc": [] },
       { "name": "TreeHomework", "rp": "Homeworks_TreeHomework.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 27, "ct": "LineCoverage", "mc": "-", "cb": 2, "tb": 2, "lch": [], "bch": [], "hc": [] },
     ]},
 ];
@@ -253,6 +255,13 @@ var riskHotspots = [
       { "value": 10.16, "exceeded": false },
     ]},
   {
+    "assembly": "Homeworks", "class": "Benchmark", "reportPath": "Homeworks_Benchmark.html", "methodName": "SparseMatrix/SparseMatrix`1<System.Int32> Benchmark/BfsBenchmark::generatorOfMatrix(System.Int32,System.Double)", "methodShortName": "generatorOfMatrix(...)", "fileIndex": 0, "line": 16,
+    "metrics": [
+      { "value": 7, "exceeded": false },
+      { "value": 64, "exceeded": false },
+      { "value": 56, "exceeded": true },
+    ]},
+  {
     "assembly": "Homeworks", "class": "FirstHomework", "reportPath": "Homeworks_FirstHomework.html", "methodName": "a FirstHomework::MinMaxFromArray(Value[])", "methodShortName": "MinMaxFromArray(...)", "fileIndex": 0, "line": 44,
     "metrics": [
       { "value": 5, "exceeded": false },
@@ -265,6 +274,20 @@ var riskHotspots = [
       { "value": 5, "exceeded": false },
       { "value": 16, "exceeded": false },
       { "value": 30, "exceeded": true },
+    ]},
+  {
+    "assembly": "Homeworks", "class": "GraphBuild", "reportPath": "Homeworks_GraphBuild.html", "methodName": "GraphBuild/ReadFile`1<Microsoft.FSharp.Core.FSharpOption`1<System.Object>> GraphBuild::MatrixReader(System.String)", "methodShortName": "MatrixReader(...)", "fileIndex": 0, "line": 41,
+    "metrics": [
+      { "value": 5, "exceeded": false },
+      { "value": 16, "exceeded": false },
+      { "value": 30, "exceeded": true },
+    ]},
+  {
+    "assembly": "Homeworks", "class": "GraphBuild", "reportPath": "Homeworks_GraphBuild.html", "methodName": "Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.UInt32,System.UInt32,Microsoft.FSharp.Core.FSharpOption`1<System.Object>>> GraphBuild/helper@69-8::Invoke(Microsoft.FSharp.Collections.FSharpList`1<System.Tuple`3<System.UInt32,System.UInt32,Microsoft.FSharp.Core.FSharpOption`1<System.Object>>>,System.Collections.Generic.IEnumerable`1<System.String>)", "methodShortName": "Invoke(...)", "fileIndex": 0, "line": 69,
+    "metrics": [
+      { "value": 4, "exceeded": false },
+      { "value": 8, "exceeded": false },
+      { "value": 20, "exceeded": true },
     ]},
 ];
 

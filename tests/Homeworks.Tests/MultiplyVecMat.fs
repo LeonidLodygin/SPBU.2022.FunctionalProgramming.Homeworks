@@ -202,7 +202,7 @@ module MultiplyTests =
                       <| array2D [ [ Some 2; Some 3; Some 4 ]
                                    [ Some 1; Option.None; Some 5 ] ]
 
-                  let result = MultiplyVecMat vec matrix fAdd fMult
+                  let result = ParallelMultiplyVecMat vec matrix fAdd fMult 0
 
                   Expect.equal
                   <| (result.Memory, result.Length)
@@ -212,7 +212,7 @@ module MultiplyTests =
               <| fun _ ->
                   let vec = SparseVector [||]
                   let matrix = SparseMatrix <| array2D []
-                  let result = MultiplyVecMat vec matrix fAdd fMult
+                  let result = ParallelMultiplyVecMat vec matrix fAdd fMult 0
 
                   Expect.equal
                   <| (result.Memory, result.Length)
@@ -222,7 +222,7 @@ module MultiplyTests =
               <| fun _ ->
                   let vec = SparseVector [| Some 1 |]
                   let matrix = SparseMatrix <| array2D [ [ Some 2 ] ]
-                  let result = MultiplyVecMat vec matrix fAdd fMult
+                  let result = ParallelMultiplyVecMat vec matrix fAdd fMult 0
 
                   Expect.equal
                   <| (result.Memory, result.Length)
@@ -331,7 +331,7 @@ module SpecialPropertyTests =
               <| fun (length: int) ->
                   let vec1, arrOfSome1 = GeneratorOfVectors(abs length)
                   let vec2, arrOfSome2 = GeneratorOfVectors(abs length)
-                  let result = FAddVector MultiplyTests.fAdd vec1 vec2
+                  let result = ParallelFAddVector MultiplyTests.fAdd vec1 vec2 0
 
                   let naiveSum (arr1: array<int option>) (arr2: array<int option>) =
                       let arrOfSum = Array.zeroCreate arr1.Length
@@ -357,7 +357,9 @@ module SpecialPropertyTests =
 
                   let vec, arrOfSome = GeneratorOfVectors(abs length)
                   let matrix, arrOfSome2D = GeneratorOfMatrix(abs length)
-                  let result = MultiplyVecMat vec matrix MultiplyTests.fAdd MultiplyTests.fMult
+
+                  let result =
+                      ParallelMultiplyVecMat vec matrix MultiplyTests.fAdd MultiplyTests.fMult 0
 
                   let naiveMultiply (arr: array<int option>) (arr2D: int option [,]) =
                       let arrOfMult = Array.zeroCreate (Array2D.length2 arr2D)
